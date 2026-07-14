@@ -1,0 +1,11 @@
+{
+  "name": "@bsn-path/content-factory",
+  "private": true,
+  "type": "module",
+  "version": "0.1.0",
+  "scripts": {
+    "test": "node --test",
+    "validate:sample": "node src/cli.mjs validate ../../content/samples/lesson-hand-hygiene.json"
+  },
+  "engines": {"node": ">=20"}
+}

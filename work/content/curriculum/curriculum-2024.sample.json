@@ -1,0 +1,14 @@
+{
+  "version": "hec-bsn-2024-internal-sample",
+  "status": "requires-official-import-verification",
+  "semesters": [
+    {"number": 1, "courses": [{"id": "s1-fon", "title": "Foundations of Nursing"}, {"id": "s1-anatomy", "title": "Anatomy and Physiology"}]},
+    {"number": 2, "courses": [{"id": "s2-biochem", "title": "Biochemistry"}]},
+    {"number": 3, "courses": [{"id": "s3-ahn1", "title": "Adult Health Nursing I"}]},
+    {"number": 4, "courses": [{"id": "s4-ahn2", "title": "Adult Health Nursing II"}]},
+    {"number": 5, "courses": [{"id": "s5-pediatric", "title": "Pediatric Nursing"}]},
+    {"number": 6, "courses": [{"id": "s6-mental", "title": "Mental Health Nursing"}]},
+    {"number": 7, "courses": [{"id": "s7-critical", "title": "Critical Care Nursing"}]},
+    {"number": 8, "courses": [{"id": "s8-leadership", "title": "Leadership and Management in Nursing"}]}
+  ]
+}

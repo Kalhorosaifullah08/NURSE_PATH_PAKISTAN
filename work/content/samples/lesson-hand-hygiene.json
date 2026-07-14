@@ -1,0 +1,18 @@
+{
+  "id": "lesson-hand-hygiene",
+  "curriculumVersion": "hec-bsn-2024",
+  "semester": 1,
+  "courseId": "s1-fon",
+  "learningOutcomeIds": ["fon-infection-prevention"],
+  "contentType": "lesson",
+  "body": {"title": "The Five Moments for Hand Hygiene", "status": "representative-sample"},
+  "difficulty": "foundation",
+  "sourceIds": ["who-five-moments"],
+  "model": "human-seeded-sample",
+  "promptVersion": "v1",
+  "automatedReview": {"generatorVerifierAgreement": true, "citationsValid": true, "duplicateScore": 0},
+  "risk": "patient_safety",
+  "reviewState": "owner_review",
+  "revision": 1,
+  "createdAt": "2026-07-14T00:00:00Z"
+}
