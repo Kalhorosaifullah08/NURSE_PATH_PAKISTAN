@@ -1,0 +1,86 @@
+{
+  "version": "2026-07-15",
+  "sources": [
+    {
+      "id": "hec-bsn-msn-2024",
+      "title": "HEC Curriculum of Nursing Education - BSN and MSN 2024",
+      "publisher": "Higher Education Commission, Pakistan",
+      "url": "https://www.hec.gov.pk/english/services/universities/RevisedCurricula/Documents/2023-2024/HEC%20Curriculum%20BSN-MSN%202024.pdf",
+      "license": "official-publication",
+      "scope": "Official Generic BSN semester structure, credits, course titles and nursing course learning outcomes."
+    },
+    {
+      "id": "openstax-microbiology",
+      "title": "Microbiology",
+      "publisher": "OpenStax, Rice University",
+      "url": "https://openstax.org/details/books/microbiology",
+      "license": "CC-BY-NC-SA-4.0",
+      "scope": "Allied-health microbiology: organisms, transmission, detection, control, host response and laboratory foundations."
+    },
+    {
+      "id": "openstax-biology-2e",
+      "title": "Biology 2e",
+      "publisher": "OpenStax, Rice University",
+      "url": "https://openstax.org/details/books/biology-2e",
+      "license": "CC-BY-4.0",
+      "scope": "Biological macromolecules, enzymes, cellular energy, metabolism and cell signalling foundations."
+    },
+    {
+      "id": "openstax-anatomy-physiology-2e",
+      "title": "Anatomy and Physiology 2e",
+      "publisher": "OpenStax, Rice University",
+      "url": "https://openstax.org/details/books/anatomy-and-physiology-2e",
+      "license": "CC-BY-NC-SA-4.0",
+      "scope": "Homeostasis and the structure and function of integumentary, musculoskeletal, cardiovascular and digestive systems."
+    },
+    {
+      "id": "openrn-nursing-fundamentals-2e",
+      "title": "Nursing Fundamentals, 2nd edition",
+      "publisher": "Open RN / Chippewa Valley Technical College; hosted by NCBI Bookshelf",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK610815/",
+      "license": "CC-BY-4.0 (some embedded activities carry separate notices)",
+      "scope": "Entry-level nursing scope, communication, nursing process, safety, culture, spiritual care and fundamental care concepts. Pakistan-specific scope claims require local review."
+    },
+    {
+      "id": "openstax-writing-guide",
+      "title": "Writing Guide with Handbook",
+      "publisher": "OpenStax, Rice University",
+      "url": "https://openstax.org/details/books/writing-guide",
+      "license": "CC-BY-4.0",
+      "scope": "Functional academic English, paragraphs, clear sentences, grammar, punctuation, audience, revision and source use."
+    },
+    {
+      "id": "pakistan-constitution-official",
+      "title": "The Constitution of the Islamic Republic of Pakistan",
+      "publisher": "National Assembly of Pakistan",
+      "url": "https://na.gov.pk/uploads/documents/6926e060076ed_467.pdf",
+      "license": "official-publication",
+      "scope": "Official constitutional text. Generated historical or interpretive claims must be distinguished from constitutional provisions."
+    },
+    {
+      "id": "hec-undergraduate-policy-1-1",
+      "title": "Undergraduate Education Policy, Version 1.1",
+      "publisher": "Higher Education Commission, Pakistan",
+      "url": "https://www.hec.gov.pk/english/services/universities/HEDP/Documents/UGE-Policy.pdf",
+      "license": "official-publication",
+      "scope": "HEC general-education framework and model-course context for Functional English, Pakistan Studies and ICT."
+    },
+    {
+      "id": "openstax-workplace-software-skills",
+      "title": "Workplace Software and Skills",
+      "publisher": "OpenStax, Rice University",
+      "url": "https://openstax.org/details/books/workplace-software-skills",
+      "license": "CC-BY-4.0",
+      "scope": "Computer literacy, internet research, cloud concepts, word processing, spreadsheets, presentations and collaboration tools."
+    }
+  ],
+  "courseSources": {
+    "s1-microbiology": ["hec-bsn-msn-2024", "openstax-microbiology"],
+    "s1-biochemistry": ["hec-bsn-msn-2024", "openstax-biology-2e", "openstax-anatomy-physiology-2e"],
+    "s1-functional-english": ["hec-bsn-msn-2024", "hec-undergraduate-policy-1-1", "openstax-writing-guide"],
+    "s1-fundamentals-1": ["hec-bsn-msn-2024", "openrn-nursing-fundamentals-2e"],
+    "s1-anatomy-physiology-1": ["hec-bsn-msn-2024", "openstax-anatomy-physiology-2e"],
+    "s1-pakistan-constitution": ["hec-bsn-msn-2024", "hec-undergraduate-policy-1-1", "pakistan-constitution-official"],
+    "s1-ict": ["hec-bsn-msn-2024", "hec-undergraduate-policy-1-1", "openstax-workplace-software-skills"]
+  }
+}
