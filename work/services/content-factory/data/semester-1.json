@@ -1,0 +1,20 @@
+{
+  "semester": 1,
+  "curriculumVersion": "hec-bsn-2024",
+  "source": {
+    "id": "hec-bsn-msn-2024",
+    "title": "HEC Curriculum of Nursing Education - BSN and MSN 2024",
+    "url": "https://www.hec.gov.pk/english/services/universities/RevisedCurricula/Documents/2023-2024/HEC%20Curriculum%20BSN-MSN%202024.pdf",
+    "pages": [11, 13, 14, 15]
+  },
+  "totalCredits": 17,
+  "courses": [
+    {"id":"s1-microbiology","title":"Microbiology","theory":1.5,"clinical":0,"lab":0.5,"credits":2,"outcomes":["Classify common disease-causing microorganisms.","Differentiate between different methods of microbe detection and destruction.","Demonstrate infection control practices that prevent the spread of infection in a hospital and community environment.","Demonstrate laboratory skills to carry out simple laboratory experiments."]},
+    {"id":"s1-biochemistry","title":"Biochemistry","theory":1.5,"clinical":0,"lab":0.5,"credits":2,"outcomes":["Differentiate between the biochemical basis of proteins, carbohydrates, lipids, enzymes, and hormones.","Explain their role in metabolism.","Relate basic biochemistry to physiological functions of the human body.","Interpret basic biochemical test reports in relation to physiological function."]},
+    {"id":"s1-functional-english","title":"English - Functional English","theory":3,"clinical":0,"lab":0,"credits":3,"outcomes":[]},
+    {"id":"s1-fundamentals-1","title":"Fundamentals of Nursing - I","theory":2,"clinical":0,"lab":1,"credits":3,"outcomes":["Describe the historical development of health care and nursing and contributions of nursing leaders.","Differentiate profession and occupation.","Compare definitions of nursing by different nursing scholars.","Describe the role of a professional nurse.","Differentiate basic concepts of theories of nursing.","Differentiate models of health.","Explain health status, health belief models, and health practices.","Prioritize patient problems using a hierarchy of needs.","Apply the nursing process to human responses to actual or potential health problems.","Demonstrate safe practice of selected fundamental nursing procedures.","Apply therapeutic communication and decision-making skills.","Assess cultural, spiritual, and bio-psychosocial factors in nursing diagnoses and interventions.","Identify the scope of nursing practice in Pakistan."]},
+    {"id":"s1-anatomy-physiology-1","title":"Anatomy & Physiology - I","theory":2.5,"clinical":0,"lab":0.5,"credits":3,"outcomes":["Describe and correlate structures and functions of the musculoskeletal, integumentary, circulatory, and digestive systems.","Discuss the role of homeostasis in maintaining normal body functioning.","Relate basic anatomy and physiology concepts to nursing care."]},
+    {"id":"s1-pakistan-constitution","title":"Ideology and Constitution of Pakistan","theory":2,"clinical":0,"lab":0,"credits":2,"outcomes":[]},
+    {"id":"s1-ict","title":"Information and Communication Technology","theory":1,"clinical":0,"lab":1,"credits":2,"outcomes":[]}
+  ]
+}
