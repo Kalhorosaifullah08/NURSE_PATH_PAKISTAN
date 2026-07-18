@@ -4,6 +4,7 @@
   "type": "module",
   "version": "0.1.0",
   "scripts": {
+    "export:semester": "node src/export-semester-package.mjs",
     "start": "node src/server.mjs",
     "test": "node --test",
     "validate:sample": "node src/cli.mjs validate ../../content/samples/lesson-hand-hygiene.json"
