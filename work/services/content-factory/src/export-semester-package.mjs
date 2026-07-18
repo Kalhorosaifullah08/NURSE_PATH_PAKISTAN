@@ -14,12 +14,59 @@ if (!Number.isInteger(semester) || semester < 1 || semester > 8) {
   throw new Error('Semester must be an integer between 1 and 8.');
 }
 
-initializeApp({ credential: applicationDefault() });
-const db = getFirestore();
-const snapshot = await db.collection('contentDrafts').where('semester', '==', semester).get();
+function decodeValue(value) {
+  if ('nullValue' in value) return null;
+  if ('stringValue' in value) return value.stringValue;
+  if ('booleanValue' in value) return value.booleanValue;
+  if ('integerValue' in value) return Number(value.integerValue);
+  if ('doubleValue' in value) return value.doubleValue;
+  if ('timestampValue' in value) return value.timestampValue;
+  if ('arrayValue' in value) return (value.arrayValue.values ?? []).map(decodeValue);
+  if ('mapValue' in value) return decodeFields(value.mapValue.fields ?? {});
+  return null;
+}
 
-const items = snapshot.docs
-  .map(document => document.data())
+function decodeFields(fields) {
+  return Object.fromEntries(Object.entries(fields).map(([key, value]) => [key, decodeValue(value)]));
+}
+
+async function loadDrafts() {
+  const accessToken = process.env.GOOGLE_OAUTH_ACCESS_TOKEN;
+  if (accessToken) {
+    const projectId = process.env.GOOGLE_CLOUD_PROJECT;
+    if (!projectId) throw new Error('GOOGLE_CLOUD_PROJECT is required with GOOGLE_OAUTH_ACCESS_TOKEN.');
+    const response = await fetch(
+      `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents:runQuery`,
+      {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          structuredQuery: {
+            from: [{ collectionId: 'contentDrafts' }],
+            where: {
+              fieldFilter: {
+                field: { fieldPath: 'semester' },
+                op: 'EQUAL',
+                value: { integerValue: String(semester) },
+              },
+            },
+          },
+        }),
+      },
+    );
+    if (!response.ok) throw new Error(`Firestore export failed (${response.status}): ${await response.text()}`);
+    return (await response.json()).flatMap(row => row.document ? [decodeFields(row.document.fields ?? {})] : []);
+  }
+
+  initializeApp({ credential: applicationDefault() });
+  const db = getFirestore();
+  const snapshot = await db.collection('contentDrafts').where('semester', '==', semester).get();
+  return snapshot.docs.map(document => document.data());
+}
+
+const drafts = await loadDrafts();
+
+const items = drafts
   .filter(item =>
     item.automatedReview?.generatorVerifierAgreement === true &&
     item.automatedReview?.citationsValid === true &&
