@@ -4,65 +4,101 @@ import 'data/sample_repository.dart';
 import 'domain/models.dart';
 import 'state/app_state.dart';
 
-const _ink = Color(0xff102A43);
-const _muted = Color(0xff627D98);
-const _mint = Color(0xff4ED7B2);
-const _deepMint = Color(0xff188B78);
-const _canvas = Color(0xffF4F8F8);
-const _line = Color(0xffD9E5E3);
+const navy = Color(0xff0C3044);
+const navy2 = Color(0xff164A5F);
+const teal = Color(0xff159A83);
+const mint = Color(0xff62DCC1);
+const canvas = Color(0xffF4F8F7);
+const ink = Color(0xff122B3A);
+const muted = Color(0xff637985);
+const line = Color(0xffDCE8E5);
+const warm = Color(0xffFFF3DC);
 
-void main() => runApp(const BsnPathApp());
+void main() => runApp(const NursePathApp());
 
-class BsnPathApp extends StatefulWidget {
-  const BsnPathApp({super.key});
-
+class NursePathApp extends StatefulWidget {
+  const NursePathApp({super.key});
   @override
-  State<BsnPathApp> createState() => _BsnPathAppState();
+  State<NursePathApp> createState() => _NursePathAppState();
 }
 
-class _BsnPathAppState extends State<BsnPathApp> {
+class _NursePathAppState extends State<NursePathApp> {
   final state = AppState();
-
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'NursePath Pakistan',
-      theme: ThemeData(
-        useMaterial3: true,
-        scaffoldBackgroundColor: _canvas,
-        colorScheme: const ColorScheme.light(
-          primary: _deepMint,
-          secondary: _mint,
-          surface: Colors.white,
-          onSurface: _ink,
+  Widget build(BuildContext context) => MaterialApp(
+    debugShowCheckedModeBanner: false,
+    title: 'NursePath Pakistan',
+    theme: ThemeData(
+      useMaterial3: true,
+      scaffoldBackgroundColor: canvas,
+      colorScheme: const ColorScheme.light(
+        primary: teal,
+        secondary: mint,
+        surface: Colors.white,
+        onSurface: ink,
+      ),
+      fontFamily: 'Arial',
+      textTheme: const TextTheme(
+        displaySmall: TextStyle(
+          fontSize: 36,
+          height: 1.05,
+          fontWeight: FontWeight.w900,
+          color: ink,
+          letterSpacing: -1.2,
         ),
-        textTheme: const TextTheme(
-          headlineLarge: TextStyle(fontSize: 32, height: 1.08, color: _ink, fontWeight: FontWeight.w800, letterSpacing: -1),
-          headlineMedium: TextStyle(fontSize: 25, height: 1.15, color: _ink, fontWeight: FontWeight.w800, letterSpacing: -.5),
-          titleLarge: TextStyle(fontSize: 19, color: _ink, fontWeight: FontWeight.w700),
-          titleMedium: TextStyle(fontSize: 16, color: _ink, fontWeight: FontWeight.w700),
-          bodyLarge: TextStyle(fontSize: 16, height: 1.55, color: _ink),
-          bodyMedium: TextStyle(fontSize: 14, height: 1.45, color: _muted),
-          labelLarge: TextStyle(fontSize: 13, letterSpacing: .2, fontWeight: FontWeight.w700),
+        headlineMedium: TextStyle(
+          fontSize: 26,
+          height: 1.12,
+          fontWeight: FontWeight.w900,
+          color: ink,
+          letterSpacing: -.6,
+        ),
+        titleLarge: TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.w800,
+          color: ink,
+        ),
+        titleMedium: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w800,
+          color: ink,
+        ),
+        bodyLarge: TextStyle(fontSize: 16, height: 1.6, color: ink),
+        bodyMedium: TextStyle(fontSize: 14, height: 1.45, color: muted),
+        labelLarge: TextStyle(fontSize: 13, fontWeight: FontWeight.w800),
+      ),
+      cardTheme: CardThemeData(
+        color: Colors.white,
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(24),
+          side: const BorderSide(color: line),
         ),
       ),
-      home: AppShell(state: state),
-    );
-  }
+      filledButtonTheme: FilledButtonThemeData(
+        style: FilledButton.styleFrom(
+          backgroundColor: teal,
+          foregroundColor: Colors.white,
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+        ),
+      ),
+    ),
+    home: AppShell(state: state),
+  );
 }
 
 class AppShell extends StatefulWidget {
   const AppShell({required this.state, super.key});
   final AppState state;
-
   @override
   State<AppShell> createState() => _AppShellState();
 }
 
 class _AppShellState extends State<AppShell> {
-  int tab = 0;
-
+  int page = 0;
   @override
   void initState() {
     super.initState();
@@ -79,27 +115,766 @@ class _AppShellState extends State<AppShell> {
 
   @override
   Widget build(BuildContext context) {
-    final pages = [
-      HomePage(state: widget.state, openCourses: () => setState(() => tab = 1)),
-      CourseLibrary(state: widget.state),
-      PracticeHub(state: widget.state),
+    final screens = [
+      HomePage(
+        state: widget.state,
+        showLibrary: () => setState(() => page = 1),
+      ),
+      LibraryPage(state: widget.state),
+      PracticePage(state: widget.state),
       ProfilePage(state: widget.state),
     ];
-    return Scaffold(
-      body: SafeArea(child: pages[tab]),
-      bottomNavigationBar: SafeArea(
-        top: false,
-        child: Container(
-          margin: const EdgeInsets.fromLTRB(16, 0, 16, 14),
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          decoration: BoxDecoration(color: _ink, borderRadius: BorderRadius.circular(24), boxShadow: const [BoxShadow(color: Color(0x220B1B2A), blurRadius: 18, offset: Offset(0, 8))]),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+    return LayoutBuilder(
+      builder: (context, box) {
+        final desktop = box.maxWidth >= 900;
+        return Scaffold(
+          body: SafeArea(
+            child: Row(
+              children: [
+                if (desktop)
+                  _DesktopNav(
+                    selected: page,
+                    onChanged: (value) => setState(() => page = value),
+                  ),
+                Expanded(
+                  child: Center(
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 1180),
+                      child: screens[page],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          bottomNavigationBar: desktop
+              ? null
+              : NavigationBar(
+                  height: 72,
+                  backgroundColor: Colors.white,
+                  indicatorColor: const Color(0xffDDF5EE),
+                  selectedIndex: page,
+                  onDestinationSelected: (value) =>
+                      setState(() => page = value),
+                  destinations: const [
+                    NavigationDestination(
+                      icon: Icon(Icons.home_outlined),
+                      selectedIcon: Icon(Icons.home_rounded),
+                      label: 'Today',
+                    ),
+                    NavigationDestination(
+                      icon: Icon(Icons.menu_book_outlined),
+                      selectedIcon: Icon(Icons.menu_book_rounded),
+                      label: 'Learn',
+                    ),
+                    NavigationDestination(
+                      icon: Icon(Icons.psychology_alt_outlined),
+                      selectedIcon: Icon(Icons.psychology_alt_rounded),
+                      label: 'Practice',
+                    ),
+                    NavigationDestination(
+                      icon: Icon(Icons.person_outline_rounded),
+                      selectedIcon: Icon(Icons.person_rounded),
+                      label: 'Profile',
+                    ),
+                  ],
+                ),
+        );
+      },
+    );
+  }
+}
+
+class _DesktopNav extends StatelessWidget {
+  const _DesktopNav({required this.selected, required this.onChanged});
+  final int selected;
+  final ValueChanged<int> onChanged;
+  @override
+  Widget build(BuildContext context) => Container(
+    width: 226,
+    margin: const EdgeInsets.all(16),
+    padding: const EdgeInsets.fromLTRB(14, 18, 14, 14),
+    decoration: BoxDecoration(
+      color: navy,
+      borderRadius: BorderRadius.circular(28),
+    ),
+    child: Column(
+      children: [
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10),
+          child: _Logo(light: true),
+        ),
+        const SizedBox(height: 30),
+        for (final item in const [
+          (Icons.home_rounded, 'Today'),
+          (Icons.menu_book_rounded, 'Learn'),
+          (Icons.psychology_alt_rounded, 'Practice'),
+          (Icons.person_rounded, 'Profile'),
+        ])
+          Padding(
+            padding: const EdgeInsets.only(bottom: 7),
+            child: ListTile(
+              selected:
+                  selected ==
+                  const [
+                    'Today',
+                    'Learn',
+                    'Practice',
+                    'Profile',
+                  ].indexOf(item.$2),
+              selectedTileColor: const Color(0xff24566A),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              leading: Icon(
+                item.$1,
+                color:
+                    selected ==
+                        const [
+                          'Today',
+                          'Learn',
+                          'Practice',
+                          'Profile',
+                        ].indexOf(item.$2)
+                    ? mint
+                    : const Color(0xffAFC4CD),
+              ),
+              title: Text(
+                item.$2,
+                style: TextStyle(
+                  color:
+                      selected ==
+                          const [
+                            'Today',
+                            'Learn',
+                            'Practice',
+                            'Profile',
+                          ].indexOf(item.$2)
+                      ? Colors.white
+                      : const Color(0xffC0D0D6),
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              onTap: () => onChanged(
+                const [
+                  'Today',
+                  'Learn',
+                  'Practice',
+                  'Profile',
+                ].indexOf(item.$2),
+              ),
+            ),
+          ),
+        const Spacer(),
+        Container(
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(
+            color: const Color(0xff173F52),
+            borderRadius: BorderRadius.circular(18),
+          ),
+          child: const Row(
             children: [
-              _NavItem(icon: Icons.grid_view_rounded, label: 'Today', selected: tab == 0, onTap: () => setState(() => tab = 0)),
-              _NavItem(icon: Icons.auto_stories_rounded, label: 'Learn', selected: tab == 1, onTap: () => setState(() => tab = 1)),
-              _NavItem(icon: Icons.bolt_rounded, label: 'Practice', selected: tab == 2, onTap: () => setState(() => tab = 2)),
-              _NavItem(icon: Icons.person_rounded, label: 'Profile', selected: tab == 3, onTap: () => setState(() => tab = 3)),
+              Icon(Icons.verified_user_outlined, color: mint),
+              SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  'Clinically reviewed learning',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 12,
+                    height: 1.35,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+class HomePage extends StatelessWidget {
+  const HomePage({required this.state, required this.showLibrary, super.key});
+  final AppState state;
+  final VoidCallback showLibrary;
+  @override
+  Widget build(BuildContext context) => ListView(
+    padding: const EdgeInsets.fromLTRB(22, 22, 22, 34),
+    children: [
+      Row(
+        children: [
+          const _Logo(),
+          const Spacer(),
+          _CircleButton(icon: Icons.search_rounded, onTap: showLibrary),
+          const SizedBox(width: 8),
+          _CircleButton(icon: Icons.notifications_none_rounded, onTap: () {}),
+        ],
+      ),
+      const SizedBox(height: 34),
+      LayoutBuilder(
+        builder: (context, box) {
+          final wide = box.maxWidth > 760;
+          return wide
+              ? Row(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Expanded(flex: 7, child: _Hero(state: state)),
+                    const SizedBox(width: 18),
+                    const Expanded(flex: 3, child: _ShiftCard()),
+                  ],
+                )
+              : Column(
+                  children: [
+                    _Hero(state: state),
+                    const SizedBox(height: 16),
+                    const _ShiftCard(),
+                  ],
+                );
+        },
+      ),
+      const SizedBox(height: 30),
+      _SectionTitle(
+        title: 'Your study pulse',
+        action: 'See courses',
+        onTap: showLibrary,
+      ),
+      const SizedBox(height: 12),
+      LayoutBuilder(
+        builder: (context, box) => GridView.count(
+          crossAxisCount: box.maxWidth > 720 ? 4 : 2,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          crossAxisSpacing: 12,
+          mainAxisSpacing: 12,
+          childAspectRatio: box.maxWidth > 720 ? 1.75 : 1.45,
+          children: [
+            _Metric(
+              value: '${state.progress.length}',
+              label: 'Completed',
+              icon: Icons.check_rounded,
+              color: const Color(0xffE2F7F0),
+            ),
+            _Metric(
+              value: '${state.incorrect.length}',
+              label: 'Review queue',
+              icon: Icons.replay_rounded,
+              color: const Color(0xffFFF1DC),
+            ),
+            const _Metric(
+              value: '1 day',
+              label: 'Study streak',
+              icon: Icons.local_fire_department_rounded,
+              color: Color(0xffFFE7EC),
+            ),
+            const _Metric(
+              value: '35%',
+              label: 'Weekly goal',
+              icon: Icons.track_changes_rounded,
+              color: Color(0xffE6F0FF),
+            ),
+          ],
+        ),
+      ),
+      const SizedBox(height: 30),
+      const _SectionTitle(title: 'Continue your course'),
+      const SizedBox(height: 12),
+      _CourseFocus(state: state),
+      const SizedBox(height: 24),
+      const _ClinicalPearl(),
+    ],
+  );
+}
+
+class _Hero extends StatelessWidget {
+  const _Hero({required this.state});
+  final AppState state;
+  @override
+  Widget build(BuildContext context) => Container(
+    padding: const EdgeInsets.all(28),
+    decoration: BoxDecoration(
+      gradient: const LinearGradient(
+        colors: [navy2, navy],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+      ),
+      borderRadius: BorderRadius.circular(30),
+      boxShadow: const [
+        BoxShadow(
+          color: Color(0x260C3044),
+          blurRadius: 28,
+          offset: Offset(0, 14),
+        ),
+      ],
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'GOOD EVENING, FUTURE NURSE',
+          style: TextStyle(
+            color: mint,
+            fontSize: 11,
+            fontWeight: FontWeight.w900,
+            letterSpacing: 1.1,
+          ),
+        ),
+        const SizedBox(height: 14),
+        Text(
+          'Build confidence for\nyour next clinical shift.',
+          style: Theme.of(
+            context,
+          ).textTheme.displaySmall?.copyWith(color: Colors.white),
+        ),
+        const SizedBox(height: 13),
+        const Text(
+          'One focused lesson, one recall check, one step stronger.',
+          style: TextStyle(
+            color: Color(0xffC1D5DD),
+            fontSize: 15,
+            height: 1.45,
+          ),
+        ),
+        const SizedBox(height: 24),
+        Wrap(
+          spacing: 12,
+          runSpacing: 12,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: [
+            FilledButton.icon(
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => LessonScreen(
+                    lesson: SampleRepository.lesson,
+                    state: state,
+                  ),
+                ),
+              ),
+              icon: const Icon(Icons.play_arrow_rounded),
+              label: const Text('Resume lesson'),
+              style: FilledButton.styleFrom(
+                backgroundColor: mint,
+                foregroundColor: navy,
+              ),
+            ),
+            const Text(
+              '8 min • Fundamentals of Nursing',
+              style: TextStyle(
+                color: Color(0xffBBD0D8),
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
+      ],
+    ),
+  );
+}
+
+class _ShiftCard extends StatelessWidget {
+  const _ShiftCard();
+  @override
+  Widget build(BuildContext context) => Container(
+    padding: const EdgeInsets.all(22),
+    decoration: BoxDecoration(
+      color: warm,
+      borderRadius: BorderRadius.circular(30),
+      border: Border.all(color: const Color(0xffF4DFC0)),
+    ),
+    child: const Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          children: [
+            Icon(
+              Icons.calendar_today_rounded,
+              color: Color(0xff98641B),
+              size: 19,
+            ),
+            Spacer(),
+            Text(
+              'TODAY',
+              style: TextStyle(
+                color: Color(0xff98641B),
+                fontSize: 11,
+                fontWeight: FontWeight.w900,
+              ),
+            ),
+          ],
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(vertical: 22),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '20 min',
+                style: TextStyle(
+                  fontSize: 30,
+                  color: ink,
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
+              SizedBox(height: 4),
+              Text(
+                'Study plan',
+                style: TextStyle(color: muted, fontWeight: FontWeight.w700),
+              ),
+            ],
+          ),
+        ),
+        Row(
+          children: [
+            Expanded(
+              child: LinearProgressIndicator(
+                value: .35,
+                minHeight: 8,
+                borderRadius: BorderRadius.all(Radius.circular(8)),
+                backgroundColor: Color(0xffEBD8B9),
+                color: Color(0xffC98529),
+              ),
+            ),
+            SizedBox(width: 10),
+            Text(
+              '1/3',
+              style: TextStyle(color: ink, fontWeight: FontWeight.w900),
+            ),
+          ],
+        ),
+      ],
+    ),
+  );
+}
+
+class _Metric extends StatelessWidget {
+  const _Metric({
+    required this.value,
+    required this.label,
+    required this.icon,
+    required this.color,
+  });
+  final String value, label;
+  final IconData icon;
+  final Color color;
+  @override
+  Widget build(BuildContext context) => Container(
+    padding: const EdgeInsets.all(16),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(22),
+      border: Border.all(color: line),
+    ),
+    child: Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(9),
+          decoration: BoxDecoration(
+            color: color,
+            borderRadius: BorderRadius.circular(13),
+          ),
+          child: Icon(icon, color: navy, size: 20),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                value,
+                style: const TextStyle(
+                  fontSize: 20,
+                  color: ink,
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
+              Text(
+                label,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  color: muted,
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+class _CourseFocus extends StatelessWidget {
+  const _CourseFocus({required this.state});
+  final AppState state;
+  @override
+  Widget build(BuildContext context) => Card(
+    child: Padding(
+      padding: const EdgeInsets.all(20),
+      child: Row(
+        children: [
+          Container(
+            width: 68,
+            height: 68,
+            decoration: BoxDecoration(
+              color: const Color(0xffDFF5EF),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: const Icon(
+              Icons.health_and_safety_rounded,
+              color: teal,
+              size: 34,
+            ),
+          ),
+          const SizedBox(width: 16),
+          const Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Fundamentals of Nursing I',
+                  style: TextStyle(
+                    color: ink,
+                    fontSize: 17,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+                SizedBox(height: 5),
+                Text(
+                  'Unit 1 • Patient safety foundations',
+                  style: TextStyle(color: muted, fontSize: 13),
+                ),
+                SizedBox(height: 10),
+                LinearProgressIndicator(
+                  value: .35,
+                  minHeight: 7,
+                  borderRadius: BorderRadius.all(Radius.circular(8)),
+                  backgroundColor: Color(0xffE8F0EE),
+                  color: teal,
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 16),
+          IconButton.filled(
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) =>
+                    LessonScreen(lesson: SampleRepository.lesson, state: state),
+              ),
+            ),
+            icon: const Icon(Icons.arrow_forward_rounded),
+            style: IconButton.styleFrom(
+              backgroundColor: navy,
+              foregroundColor: Colors.white,
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+class _ClinicalPearl extends StatelessWidget {
+  const _ClinicalPearl();
+  @override
+  Widget build(BuildContext context) => Container(
+    padding: const EdgeInsets.all(20),
+    decoration: BoxDecoration(
+      color: const Color(0xffE8F4FA),
+      borderRadius: BorderRadius.circular(24),
+    ),
+    child: const Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(Icons.lightbulb_rounded, color: Color(0xff22749A)),
+        SizedBox(width: 14),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Clinical pearl',
+                style: TextStyle(color: ink, fontWeight: FontWeight.w900),
+              ),
+              SizedBox(height: 5),
+              Text(
+                'Gloves do not replace hand hygiene. Clean your hands at the indicated moments before and after glove use.',
+                style: TextStyle(color: muted, height: 1.45),
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+class LibraryPage extends StatelessWidget {
+  const LibraryPage({required this.state, super.key});
+  final AppState state;
+  @override
+  Widget build(BuildContext context) {
+    final courses = SampleRepository.courses
+        .where((c) => c.semester == state.selectedSemester)
+        .toList();
+    return ListView(
+      padding: const EdgeInsets.fromLTRB(22, 24, 22, 34),
+      children: [
+        const _PageHeader(
+          kicker: 'YOUR BSN ROADMAP',
+          title: 'Learn by semester',
+          subtitle:
+              'Every course follows the HEC Generic BSN pathway and moves from understanding to clinical recall.',
+        ),
+        const SizedBox(height: 22),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: List.generate(
+            8,
+            (i) => ChoiceChip(
+              label: Text('Semester ${i + 1}'),
+              selected: state.selectedSemester == i + 1,
+              onSelected: (_) => state.chooseSemester(i + 1),
+              selectedColor: navy,
+              labelStyle: TextStyle(
+                color: state.selectedSemester == i + 1 ? Colors.white : ink,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 24),
+        Row(
+          children: [
+            Expanded(
+              child: Text(
+                'Semester ${state.selectedSemester} courses',
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+            ),
+            Text(
+              '${courses.length} courses',
+              style: const TextStyle(color: muted, fontWeight: FontWeight.w600),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        LayoutBuilder(
+          builder: (context, box) => GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: courses.length,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: box.maxWidth > 760 ? 2 : 1,
+              crossAxisSpacing: 14,
+              mainAxisSpacing: 14,
+              mainAxisExtent: 152,
+            ),
+            itemBuilder: (context, index) =>
+                _CourseCard(course: courses[index], state: state),
+          ),
+        ),
+        if (courses.isEmpty) const _LockedSemester(),
+      ],
+    );
+  }
+}
+
+class _CourseCard extends StatelessWidget {
+  const _CourseCard({required this.course, required this.state});
+  final CourseSummary course;
+  final AppState state;
+  @override
+  Widget build(BuildContext context) {
+    final ready = course.id == SampleRepository.lesson.courseId;
+    final icons = [
+      Icons.health_and_safety_rounded,
+      Icons.biotech_rounded,
+      Icons.psychology_rounded,
+      Icons.monitor_heart_rounded,
+      Icons.calculate_rounded,
+      Icons.language_rounded,
+      Icons.computer_rounded,
+    ];
+    return Card(
+      child: InkWell(
+        borderRadius: BorderRadius.circular(24),
+        onTap: () => Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => CourseScreen(course: course, state: state),
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(18),
+          child: Row(
+            children: [
+              Container(
+                width: 54,
+                height: 54,
+                decoration: BoxDecoration(
+                  color: ready
+                      ? const Color(0xffDFF5EF)
+                      : const Color(0xffEEF3F4),
+                  borderRadius: BorderRadius.circular(17),
+                ),
+                child: Icon(
+                  icons[course.title.length % icons.length],
+                  color: ready ? teal : muted,
+                ),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      course.title,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        color: ink,
+                        fontWeight: FontWeight.w900,
+                        fontSize: 16,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      ready
+                          ? '1 unit ready • 35% complete'
+                          : 'Curriculum mapped • review pending',
+                      style: const TextStyle(color: muted, fontSize: 12),
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        Icon(
+                          ready
+                              ? Icons.play_circle_fill_rounded
+                              : Icons.lock_clock_rounded,
+                          size: 17,
+                          color: ready ? teal : muted,
+                        ),
+                        const SizedBox(width: 5),
+                        Text(
+                          ready ? 'Continue studying' : 'Coming after review',
+                          style: TextStyle(
+                            color: ready ? teal : muted,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              const Icon(Icons.chevron_right_rounded, color: muted),
             ],
           ),
         ),
@@ -108,220 +883,313 @@ class _AppShellState extends State<AppShell> {
   }
 }
 
-class _NavItem extends StatelessWidget {
-  const _NavItem({required this.icon, required this.label, required this.selected, required this.onTap});
-  final IconData icon;
-  final String label;
-  final bool selected;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) => InkWell(
-    onTap: onTap,
-    borderRadius: BorderRadius.circular(16),
-    child: AnimatedContainer(
-      duration: const Duration(milliseconds: 180),
-      padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 7),
-      decoration: BoxDecoration(color: selected ? const Color(0xff25485A) : Colors.transparent, borderRadius: BorderRadius.circular(16)),
-      child: Column(mainAxisSize: MainAxisSize.min, children: [
-        Icon(icon, color: selected ? _mint : const Color(0xffB8C9D1), size: 21),
-        const SizedBox(height: 3),
-        Text(label, style: TextStyle(color: selected ? Colors.white : const Color(0xffB8C9D1), fontSize: 11, fontWeight: FontWeight.w700)),
-      ]),
-    ),
-  );
-}
-
-class HomePage extends StatelessWidget {
-  const HomePage({required this.state, required this.openCourses, super.key});
-  final AppState state;
-  final VoidCallback openCourses;
-
-  @override
-  Widget build(BuildContext context) => SingleChildScrollView(
-    padding: const EdgeInsets.fromLTRB(20, 20, 20, 26),
-    child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Row(children: [
-        const _BrandMark(),
-        const SizedBox(width: 10),
-        const Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text('BSN PATH', style: TextStyle(fontWeight: FontWeight.w900, color: _ink, letterSpacing: 1.1)),
-          Text('Pakistan', style: TextStyle(color: _deepMint, fontSize: 12, fontWeight: FontWeight.w700)),
-        ])),
-        Container(width: 42, height: 42, decoration: BoxDecoration(color: Colors.white, shape: BoxShape.circle, border: Border.all(color: _line)), child: const Icon(Icons.notifications_none_rounded, color: _ink)),
-      ]),
-      const SizedBox(height: 34),
-      const Text('Good evening,', style: TextStyle(fontSize: 16, color: _muted, fontWeight: FontWeight.w600)),
-      const Text('Ready for a stronger shift?', style: TextStyle(fontSize: 29, height: 1.15, color: _ink, fontWeight: FontWeight.w800, letterSpacing: -.8)),
-      const SizedBox(height: 22),
-      _TodayCard(state: state),
-      const SizedBox(height: 26),
-      Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        Text('Your learning pulse', style: Theme.of(context).textTheme.titleLarge),
-        TextButton(onPressed: openCourses, child: const Text('View courses')),
-      ]),
-      const SizedBox(height: 10),
-      Row(children: [
-        Expanded(child: _StatCard(value: '${state.progress.length}', label: 'Activities', icon: Icons.check_circle_outline_rounded, tint: const Color(0xffE0F7F0))),
-        const SizedBox(width: 12),
-        Expanded(child: _StatCard(value: '${state.incorrect.length}', label: 'To review', icon: Icons.refresh_rounded, tint: const Color(0xffFFF0DD))),
-        const SizedBox(width: 12),
-        const Expanded(child: _StatCard(value: '1', label: 'Day streak', icon: Icons.local_fire_department_outlined, tint: Color(0xffFDE5EB))),
-      ]),
-      const SizedBox(height: 28),
-      Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        Text('Continue learning', style: Theme.of(context).textTheme.titleLarge),
-        const Text('Semester 1', style: TextStyle(color: _muted, fontWeight: FontWeight.w600)),
-      ]),
-      const SizedBox(height: 12),
-      _ContinueCard(state: state),
-      const SizedBox(height: 26),
-      Text('Designed for your degree', style: Theme.of(context).textTheme.titleLarge),
-      const SizedBox(height: 10),
-      const Text('Every lesson, quiz, flashcard and mock is organised around your BSN semester—not a generic question bank.'),
-    ]),
-  );
-}
-
-class _BrandMark extends StatelessWidget {
-  const _BrandMark();
+class _LockedSemester extends StatelessWidget {
+  const _LockedSemester();
   @override
   Widget build(BuildContext context) => Container(
-    width: 42,
-    height: 42,
-    decoration: BoxDecoration(color: _ink, borderRadius: BorderRadius.circular(14)),
-    child: const Stack(alignment: Alignment.center, children: [
-      Icon(Icons.favorite_rounded, color: _mint, size: 21),
-      Positioned(bottom: 7, child: Text('+', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 15))),
-    ]),
-  );
-}
-
-class _TodayCard extends StatelessWidget {
-  const _TodayCard({required this.state});
-  final AppState state;
-  @override
-  Widget build(BuildContext context) => Container(
-    width: double.infinity,
-    padding: const EdgeInsets.all(20),
+    padding: const EdgeInsets.all(28),
     decoration: BoxDecoration(
-      gradient: const LinearGradient(colors: [Color(0xff133B4E), Color(0xff0D273B)], begin: Alignment.topLeft, end: Alignment.bottomRight),
-      borderRadius: BorderRadius.circular(28),
-      boxShadow: const [BoxShadow(color: Color(0x2E0B1B2A), blurRadius: 18, offset: Offset(0, 10))],
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(24),
+      border: Border.all(color: line),
     ),
-    child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Row(children: [
-        Container(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6), decoration: BoxDecoration(color: const Color(0xff246176), borderRadius: BorderRadius.circular(99)), child: const Text('TODAY’S PLAN', style: TextStyle(color: Color(0xffB7F7E5), fontSize: 11, letterSpacing: .8, fontWeight: FontWeight.w800))),
-        const Spacer(),
-        Text('${state.progress.length}/3 done', style: const TextStyle(color: Color(0xffC4D6DE), fontSize: 12, fontWeight: FontWeight.w700)),
-      ]),
-      const SizedBox(height: 16),
-      const Text('Build clinical confidence\nin 20 minutes.', style: TextStyle(color: Colors.white, fontSize: 24, height: 1.15, fontWeight: FontWeight.w800)),
-      const SizedBox(height: 12),
-      const Text('Foundations of Nursing · Unit 1', style: TextStyle(color: Color(0xffB7C9D2), fontWeight: FontWeight.w600)),
-      const SizedBox(height: 20),
-      Row(children: [
-        Expanded(child: ClipRRect(borderRadius: BorderRadius.circular(12), child: const LinearProgressIndicator(value: .35, minHeight: 9, color: _mint, backgroundColor: Color(0xff31566A)))),
-        const SizedBox(width: 14),
-        FilledButton.icon(onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => LessonScreen(lesson: SampleRepository.lesson, state: state))), icon: const Icon(Icons.play_arrow_rounded, size: 18), label: const Text('Resume'), style: FilledButton.styleFrom(backgroundColor: _mint, foregroundColor: _ink, padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 13))),
-      ]),
-    ]),
+    child: const Column(
+      children: [
+        Icon(Icons.route_rounded, color: teal, size: 40),
+        SizedBox(height: 12),
+        Text(
+          'This semester is mapped',
+          style: TextStyle(
+            color: ink,
+            fontSize: 18,
+            fontWeight: FontWeight.w900,
+          ),
+        ),
+        SizedBox(height: 6),
+        Text(
+          'Lessons will appear here after academic and clinical review.',
+          textAlign: TextAlign.center,
+          style: TextStyle(color: muted),
+        ),
+      ],
+    ),
   );
 }
 
-class _StatCard extends StatelessWidget {
-  const _StatCard({required this.value, required this.label, required this.icon, required this.tint});
-  final String value;
-  final String label;
+class PracticePage extends StatelessWidget {
+  const PracticePage({required this.state, super.key});
+  final AppState state;
+  @override
+  Widget build(BuildContext context) => ListView(
+    padding: const EdgeInsets.fromLTRB(22, 24, 22, 34),
+    children: [
+      const _PageHeader(
+        kicker: 'ACTIVE RECALL',
+        title: 'Practice with purpose',
+        subtitle:
+            'Short, focused question sets that adapt to what you need to review.',
+      ),
+      const SizedBox(height: 24),
+      Container(
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          color: navy,
+          borderRadius: BorderRadius.circular(28),
+        ),
+        child: Row(
+          children: [
+            const Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Daily clinical check',
+                    style: TextStyle(
+                      color: mint,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    '10 questions\nabout patient safety',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                      height: 1.15,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    'About 8 minutes',
+                    style: TextStyle(color: Color(0xffBDD0D8)),
+                  ),
+                ],
+              ),
+            ),
+            FilledButton.icon(
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => QuestionScreen(
+                    question: SampleRepository.questions.first,
+                    state: state,
+                  ),
+                ),
+              ),
+              icon: const Icon(Icons.play_arrow_rounded),
+              label: const Text('Start'),
+              style: FilledButton.styleFrom(
+                backgroundColor: mint,
+                foregroundColor: navy,
+              ),
+            ),
+          ],
+        ),
+      ),
+      const SizedBox(height: 18),
+      LayoutBuilder(
+        builder: (context, box) => GridView.count(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          crossAxisCount: box.maxWidth > 720 ? 3 : 1,
+          crossAxisSpacing: 14,
+          mainAxisSpacing: 14,
+          childAspectRatio: box.maxWidth > 720 ? 1.25 : 2.5,
+          children: [
+            _PracticeCard(
+              icon: Icons.tune_rounded,
+              title: 'Build a quiz',
+              text: 'Choose course, topic and difficulty.',
+              color: const Color(0xffE8F3FF),
+              onTap: () {},
+            ),
+            _PracticeCard(
+              icon: Icons.replay_rounded,
+              title: 'Review mistakes',
+              text: state.incorrect.isEmpty
+                  ? 'Your review queue is clear.'
+                  : '${state.incorrect.length} question needs review.',
+              color: const Color(0xffFFF0E5),
+              onTap: () {},
+            ),
+            _PracticeCard(
+              icon: Icons.timer_rounded,
+              title: 'Semester mock',
+              text: 'Practice pacing under exam conditions.',
+              color: const Color(0xffE5F7F0),
+              onTap: () {},
+            ),
+          ],
+        ),
+      ),
+      const SizedBox(height: 24),
+      const _ClinicalPearl(),
+    ],
+  );
+}
+
+class _PracticeCard extends StatelessWidget {
+  const _PracticeCard({
+    required this.icon,
+    required this.title,
+    required this.text,
+    required this.color,
+    required this.onTap,
+  });
   final IconData icon;
-  final Color tint;
-  @override
-  Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.all(13),
-    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(18), border: Border.all(color: _line)),
-    child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Container(padding: const EdgeInsets.all(7), decoration: BoxDecoration(color: tint, borderRadius: BorderRadius.circular(10)), child: Icon(icon, color: _ink, size: 17)),
-      const SizedBox(height: 13),
-      Text(value, style: const TextStyle(fontSize: 21, color: _ink, fontWeight: FontWeight.w800)),
-      Text(label, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 11, color: _muted, fontWeight: FontWeight.w600)),
-    ]),
-  );
-}
-
-class _ContinueCard extends StatelessWidget {
-  const _ContinueCard({required this.state});
-  final AppState state;
-  @override
-  Widget build(BuildContext context) => InkWell(
-    onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => LessonScreen(lesson: SampleRepository.lesson, state: state))),
-    borderRadius: BorderRadius.circular(22),
-    child: Ink(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(22), border: Border.all(color: _line)),
-      child: Row(children: [
-        Container(width: 54, height: 54, decoration: BoxDecoration(color: const Color(0xffE3F6F1), borderRadius: BorderRadius.circular(17)), child: const Icon(Icons.health_and_safety_outlined, color: _deepMint, size: 28)),
-        const SizedBox(width: 14),
-        const Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text('The Five Moments for Hand Hygiene', style: TextStyle(color: _ink, fontWeight: FontWeight.w800, height: 1.25)),
-          SizedBox(height: 5),
-          Text('Lesson · 8 min left', style: TextStyle(color: _muted, fontSize: 13)),
-        ])),
-        const Icon(Icons.arrow_forward_rounded, color: _deepMint),
-      ]),
-    ),
-  );
-}
-
-class CourseLibrary extends StatelessWidget {
-  const CourseLibrary({required this.state, super.key});
-  final AppState state;
-  @override
-  Widget build(BuildContext context) {
-    final courses = SampleRepository.courses.where((course) => course.semester == state.selectedSemester).toList();
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Padding(padding: const EdgeInsets.fromLTRB(20, 22, 20, 12), child: Row(children: [
-        const Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text('Your degree', style: TextStyle(color: _muted, fontWeight: FontWeight.w600)), Text('Course library', style: TextStyle(fontSize: 27, color: _ink, fontWeight: FontWeight.w800))])),
-        DropdownButtonHideUnderline(child: Container(padding: const EdgeInsets.symmetric(horizontal: 10), decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(13), border: Border.all(color: _line)), child: DropdownButton<int>(value: state.selectedSemester, items: List.generate(8, (index) => DropdownMenuItem(value: index + 1, child: Text('Sem ${index + 1}'))), onChanged: (value) { if (value != null) state.chooseSemester(value); }))),
-      ])),
-      Padding(padding: const EdgeInsets.symmetric(horizontal: 20), child: Text('Study each course in the order your semester needs.', style: Theme.of(context).textTheme.bodyMedium)),
-      const SizedBox(height: 12),
-      Expanded(child: ListView.builder(padding: const EdgeInsets.fromLTRB(20, 4, 20, 20), itemCount: courses.length + 1, itemBuilder: (context, index) {
-        if (index == courses.length) return const _SemesterRoadmap();
-        final course = courses[index];
-        final available = course.id == SampleRepository.lesson.courseId;
-        return _CourseTile(course: course, available: available, onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => CourseScreen(course: course, state: state))));
-      })),
-    ]);
-  }
-}
-
-class _CourseTile extends StatelessWidget {
-  const _CourseTile({required this.course, required this.available, required this.onTap});
-  final CourseSummary course;
-  final bool available;
+  final String title, text;
+  final Color color;
   final VoidCallback onTap;
   @override
-  Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.only(bottom: 12),
-    child: InkWell(onTap: onTap, borderRadius: BorderRadius.circular(20), child: Ink(padding: const EdgeInsets.all(16), decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20), border: Border.all(color: _line)), child: Row(children: [
-      Container(width: 48, height: 48, decoration: BoxDecoration(color: available ? const Color(0xffE3F6F1) : const Color(0xffEDF2F4), borderRadius: BorderRadius.circular(15)), child: Icon(available ? Icons.menu_book_rounded : Icons.auto_stories_outlined, color: available ? _deepMint : _muted)),
-      const SizedBox(width: 14),
-      Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text(course.title, style: const TextStyle(color: _ink, fontWeight: FontWeight.w800)),
-        const SizedBox(height: 4),
-        Text(available ? '1 lesson · 1 quiz ready' : 'Curriculum mapped · content in preparation', style: const TextStyle(color: _muted, fontSize: 12)),
-      ])),
-      Icon(available ? Icons.arrow_forward_rounded : Icons.lock_outline_rounded, color: available ? _deepMint : _muted, size: 20),
-    ]))),
+  Widget build(BuildContext context) => Card(
+    child: InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(24),
+      child: Padding(
+        padding: const EdgeInsets.all(18),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: color,
+                borderRadius: BorderRadius.circular(14),
+              ),
+              child: Icon(icon, color: navy),
+            ),
+            const Spacer(),
+            Text(
+              title,
+              style: const TextStyle(
+                color: ink,
+                fontWeight: FontWeight.w900,
+                fontSize: 16,
+              ),
+            ),
+            const SizedBox(height: 5),
+            Text(text, style: const TextStyle(color: muted, fontSize: 12)),
+          ],
+        ),
+      ),
+    ),
   );
 }
 
-class _SemesterRoadmap extends StatelessWidget {
-  const _SemesterRoadmap();
+class ProfilePage extends StatelessWidget {
+  const ProfilePage({required this.state, super.key});
+  final AppState state;
   @override
-  Widget build(BuildContext context) => Container(margin: const EdgeInsets.only(top: 8), padding: const EdgeInsets.all(18), decoration: BoxDecoration(color: const Color(0xffE8F2F1), borderRadius: BorderRadius.circular(20)), child: const Row(children: [
-    Icon(Icons.route_rounded, color: _deepMint), SizedBox(width: 12), Expanded(child: Text('Your full 4-year nursing pathway is mapped here. Unlock each semester when you need it.', style: TextStyle(color: _ink, height: 1.4, fontWeight: FontWeight.w600))),
-  ]));
+  Widget build(BuildContext context) => ListView(
+    padding: const EdgeInsets.fromLTRB(22, 24, 22, 34),
+    children: [
+      const _PageHeader(
+        kicker: 'YOUR JOURNEY',
+        title: 'Study profile',
+        subtitle:
+            'Manage progress, offline learning and your personal study plan.',
+      ),
+      const SizedBox(height: 24),
+      Container(
+        padding: const EdgeInsets.all(22),
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(colors: [navy2, navy]),
+          borderRadius: BorderRadius.circular(28),
+        ),
+        child: Row(
+          children: [
+            const CircleAvatar(
+              radius: 31,
+              backgroundColor: mint,
+              child: Icon(Icons.person_rounded, color: navy, size: 34),
+            ),
+            const SizedBox(width: 16),
+            const Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Future registered nurse',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
+                  SizedBox(height: 4),
+                  Text(
+                    'Semester 1 • Generic BSN',
+                    style: TextStyle(color: Color(0xffBDD0D8)),
+                  ),
+                ],
+              ),
+            ),
+            OutlinedButton(
+              onPressed: () {},
+              style: OutlinedButton.styleFrom(
+                foregroundColor: Colors.white,
+                side: const BorderSide(color: Color(0xff6E8B98)),
+              ),
+              child: const Text('Sign in'),
+            ),
+          ],
+        ),
+      ),
+      const SizedBox(height: 20),
+      for (final row in [
+        (
+          Icons.insights_rounded,
+          'Learning progress',
+          '${state.progress.length} activities completed',
+        ),
+        (
+          Icons.download_for_offline_outlined,
+          'Offline library',
+          'Download semester packages',
+        ),
+        (
+          Icons.notifications_active_outlined,
+          'Study reminders',
+          'Build a consistent routine',
+        ),
+        (
+          Icons.shield_outlined,
+          'Safety and privacy',
+          'Clinical disclaimer and support',
+        ),
+      ])
+        _ProfileItem(icon: row.$1, title: row.$2, detail: row.$3),
+    ],
+  );
+}
+
+class _ProfileItem extends StatelessWidget {
+  const _ProfileItem({
+    required this.icon,
+    required this.title,
+    required this.detail,
+  });
+  final IconData icon;
+  final String title, detail;
+  @override
+  Widget build(BuildContext context) => Card(
+    margin: const EdgeInsets.only(bottom: 10),
+    child: ListTile(
+      contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 7),
+      leading: Container(
+        padding: const EdgeInsets.all(9),
+        decoration: BoxDecoration(
+          color: const Color(0xffE1F5EF),
+          borderRadius: BorderRadius.circular(13),
+        ),
+        child: Icon(icon, color: teal),
+      ),
+      title: Text(title, style: const TextStyle(fontWeight: FontWeight.w900)),
+      subtitle: Text(detail),
+      trailing: const Icon(Icons.chevron_right_rounded),
+    ),
+  );
 }
 
 class CourseScreen extends StatelessWidget {
@@ -330,46 +1198,164 @@ class CourseScreen extends StatelessWidget {
   final AppState state;
   @override
   Widget build(BuildContext context) {
-    final available = course.id == SampleRepository.lesson.courseId;
+    final ready = course.id == SampleRepository.lesson.courseId;
     return Scaffold(
-      appBar: AppBar(backgroundColor: _canvas, surfaceTintColor: Colors.transparent, title: const Text('Course overview', style: TextStyle(color: _ink, fontWeight: FontWeight.w800))),
-      body: ListView(padding: const EdgeInsets.all(20), children: [
-        Container(padding: const EdgeInsets.all(22), decoration: BoxDecoration(color: _ink, borderRadius: BorderRadius.circular(28)), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text('SEMESTER ${course.semester}', style: const TextStyle(color: _mint, letterSpacing: 1.1, fontWeight: FontWeight.w800, fontSize: 12)),
-          const SizedBox(height: 10), Text(course.title, style: const TextStyle(color: Colors.white, fontSize: 27, height: 1.1, fontWeight: FontWeight.w800)),
-          const SizedBox(height: 12), Text(available ? 'Start your first study unit today.' : 'This course is mapped and will become available after content review.', style: const TextStyle(color: Color(0xffBBD0D8), height: 1.45)),
-        ])),
-        const SizedBox(height: 22),
-        Text('Study path', style: Theme.of(context).textTheme.titleLarge),
-        const SizedBox(height: 10),
-        if (available) ...[
-          _LessonStep(number: '01', title: SampleRepository.lesson.title, detail: 'Lesson · 8 minutes', complete: false, onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => LessonScreen(lesson: SampleRepository.lesson, state: state)))),
-          _LessonStep(number: '02', title: 'Check your understanding', detail: 'Quiz · 1 question', complete: false, onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => QuestionScreen(question: SampleRepository.questions.first, state: state)))),
-        ] else const _EmptyCourseState(),
-      ]),
+      appBar: AppBar(
+        backgroundColor: canvas,
+        surfaceTintColor: Colors.transparent,
+      ),
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 900),
+          child: ListView(
+            padding: const EdgeInsets.fromLTRB(22, 8, 22, 34),
+            children: [
+              Container(
+                padding: const EdgeInsets.all(28),
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(colors: [navy2, navy]),
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'SEMESTER ${course.semester}',
+                      style: const TextStyle(
+                        color: mint,
+                        fontSize: 11,
+                        letterSpacing: 1,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      course.title,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 30,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      ready
+                          ? 'Build safe nursing foundations through short lessons and active recall.'
+                          : 'This course is academically mapped and awaiting final content review.',
+                      style: const TextStyle(
+                        color: Color(0xffC1D3DA),
+                        height: 1.45,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 24),
+              Text('Study path', style: Theme.of(context).textTheme.titleLarge),
+              const SizedBox(height: 12),
+              if (ready) ...[
+                _StudyStep(
+                  number: '01',
+                  title: SampleRepository.lesson.title,
+                  meta: 'Lesson • 8 minutes',
+                  icon: Icons.auto_stories_rounded,
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => LessonScreen(
+                        lesson: SampleRepository.lesson,
+                        state: state,
+                      ),
+                    ),
+                  ),
+                ),
+                _StudyStep(
+                  number: '02',
+                  title: 'Check your understanding',
+                  meta: 'Quick check • 1 question',
+                  icon: Icons.quiz_outlined,
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => QuestionScreen(
+                        question: SampleRepository.questions.first,
+                        state: state,
+                      ),
+                    ),
+                  ),
+                ),
+              ] else
+                const _LockedSemester(),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
 
-class _LessonStep extends StatelessWidget {
-  const _LessonStep({required this.number, required this.title, required this.detail, required this.complete, required this.onTap});
-  final String number;
-  final String title;
-  final String detail;
-  final bool complete;
+class _StudyStep extends StatelessWidget {
+  const _StudyStep({
+    required this.number,
+    required this.title,
+    required this.meta,
+    required this.icon,
+    required this.onTap,
+  });
+  final String number, title, meta;
+  final IconData icon;
   final VoidCallback onTap;
   @override
-  Widget build(BuildContext context) => InkWell(onTap: onTap, borderRadius: BorderRadius.circular(18), child: Ink(padding: const EdgeInsets.all(16), decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(18), border: Border.all(color: _line)), child: Row(children: [
-    Text(number, style: const TextStyle(color: _deepMint, fontWeight: FontWeight.w900, fontSize: 18)), const SizedBox(width: 14), Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(title, style: const TextStyle(color: _ink, fontWeight: FontWeight.w800)), const SizedBox(height: 4), Text(detail, style: const TextStyle(color: _muted, fontSize: 12))])), const Icon(Icons.arrow_forward_rounded, color: _deepMint),
-  ])));
-}
-
-class _EmptyCourseState extends StatelessWidget {
-  const _EmptyCourseState();
-  @override
-  Widget build(BuildContext context) => Container(padding: const EdgeInsets.all(22), decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20), border: Border.all(color: _line)), child: const Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-    Icon(Icons.auto_awesome_outlined, color: _deepMint), SizedBox(height: 12), Text('This course is being prepared', style: TextStyle(fontSize: 17, color: _ink, fontWeight: FontWeight.w800)), SizedBox(height: 6), Text('The owner workflow will generate, review and package content before it is released to students.', style: TextStyle(color: _muted, height: 1.45)),
-  ]));
+  Widget build(BuildContext context) => Card(
+    margin: const EdgeInsets.only(bottom: 12),
+    child: InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(24),
+      child: Padding(
+        padding: const EdgeInsets.all(18),
+        child: Row(
+          children: [
+            Text(
+              number,
+              style: const TextStyle(
+                color: teal,
+                fontSize: 18,
+                fontWeight: FontWeight.w900,
+              ),
+            ),
+            const SizedBox(width: 14),
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: const Color(0xffE2F5F0),
+                borderRadius: BorderRadius.circular(14),
+              ),
+              child: Icon(icon, color: teal),
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      color: ink,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    meta,
+                    style: const TextStyle(color: muted, fontSize: 12),
+                  ),
+                ],
+              ),
+            ),
+            const Icon(Icons.arrow_forward_rounded, color: teal),
+          ],
+        ),
+      ),
+    ),
+  );
 }
 
 class LessonScreen extends StatelessWidget {
@@ -378,47 +1364,224 @@ class LessonScreen extends StatelessWidget {
   final AppState state;
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(backgroundColor: _canvas, surfaceTintColor: Colors.transparent, actions: [IconButton(onPressed: () => state.toggleBookmark(lesson.id), icon: Icon(state.bookmarks.contains(lesson.id) ? Icons.bookmark_rounded : Icons.bookmark_border_rounded, color: _ink))]),
-    body: ListView(padding: const EdgeInsets.fromLTRB(20, 10, 20, 30), children: [
-      const Text('FOUNDATIONS OF NURSING · UNIT 1', style: TextStyle(color: _deepMint, letterSpacing: .9, fontSize: 11, fontWeight: FontWeight.w800)),
-      const SizedBox(height: 12), Text(lesson.title, style: Theme.of(context).textTheme.headlineLarge), const SizedBox(height: 14),
-      Container(padding: const EdgeInsets.all(15), decoration: BoxDecoration(color: const Color(0xffE8F5F2), borderRadius: BorderRadius.circular(17)), child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [const Icon(Icons.flag_outlined, color: _deepMint), const SizedBox(width: 10), Expanded(child: Text(lesson.objective, style: const TextStyle(color: _ink, height: 1.45, fontWeight: FontWeight.w600)))])),
-      const SizedBox(height: 26), ...lesson.sections.map((section) => Padding(padding: const EdgeInsets.only(bottom: 19), child: Text(section, style: Theme.of(context).textTheme.bodyLarge))),
-      const SizedBox(height: 4), Container(padding: const EdgeInsets.all(18), decoration: BoxDecoration(color: _ink, borderRadius: BorderRadius.circular(20)), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [const Text('Key takeaway', style: TextStyle(color: _mint, fontWeight: FontWeight.w800)), const SizedBox(height: 7), Text(lesson.summary, style: const TextStyle(color: Colors.white, height: 1.45, fontSize: 16, fontWeight: FontWeight.w600))])),
-      const SizedBox(height: 22), const Text('Source', style: TextStyle(color: _ink, fontWeight: FontWeight.w800)), const SizedBox(height: 5), ...lesson.references.map((reference) => Text(reference, style: const TextStyle(color: _muted))),
-      const SizedBox(height: 24), FilledButton.icon(onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => QuestionScreen(question: SampleRepository.questions.first, state: state))), style: FilledButton.styleFrom(backgroundColor: _deepMint, foregroundColor: Colors.white, padding: const EdgeInsets.symmetric(vertical: 16), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))), icon: const Icon(Icons.arrow_forward_rounded), label: const Text('Continue to quick check')),
-    ]),
+    appBar: AppBar(
+      backgroundColor: canvas,
+      surfaceTintColor: Colors.transparent,
+      actions: [
+        IconButton(
+          onPressed: () => state.toggleBookmark(lesson.id),
+          icon: Icon(
+            state.bookmarks.contains(lesson.id)
+                ? Icons.bookmark_rounded
+                : Icons.bookmark_border_rounded,
+          ),
+        ),
+      ],
+    ),
+    body: Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 850),
+        child: ListView(
+          padding: const EdgeInsets.fromLTRB(22, 4, 22, 40),
+          children: [
+            const Row(
+              children: [
+                Expanded(
+                  child: LinearProgressIndicator(
+                    value: .65,
+                    minHeight: 6,
+                    borderRadius: BorderRadius.all(Radius.circular(8)),
+                    backgroundColor: line,
+                    color: teal,
+                  ),
+                ),
+                SizedBox(width: 12),
+                Text(
+                  'LESSON 1 OF 2',
+                  style: TextStyle(
+                    color: muted,
+                    fontSize: 10,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 28),
+            const Text(
+              'FUNDAMENTALS OF NURSING I • UNIT 1',
+              style: TextStyle(
+                color: teal,
+                fontSize: 11,
+                letterSpacing: .9,
+                fontWeight: FontWeight.w900,
+              ),
+            ),
+            const SizedBox(height: 10),
+            Text(lesson.title, style: Theme.of(context).textTheme.displaySmall),
+            const SizedBox(height: 18),
+            Container(
+              padding: const EdgeInsets.all(18),
+              decoration: BoxDecoration(
+                color: const Color(0xffE3F5F0),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Icon(Icons.flag_rounded, color: teal),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Learning outcome',
+                          style: TextStyle(
+                            color: teal,
+                            fontSize: 11,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+                        const SizedBox(height: 5),
+                        Text(
+                          lesson.objective,
+                          style: const TextStyle(
+                            color: ink,
+                            height: 1.45,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 24),
+            for (var i = 0; i < lesson.sections.length; i++)
+              _LessonSection(index: i, text: lesson.sections[i]),
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: navy,
+                borderRadius: BorderRadius.circular(24),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Row(
+                    children: [
+                      Icon(Icons.stars_rounded, color: mint),
+                      SizedBox(width: 8),
+                      Text(
+                        'Remember at the bedside',
+                        style: TextStyle(
+                          color: mint,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    lesson.summary,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      height: 1.5,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 18),
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: const Color(0xffFFF1E1),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: const Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(
+                    Icons.health_and_safety_outlined,
+                    color: Color(0xffA25B13),
+                  ),
+                  SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      'Follow your institution’s infection-prevention policy and clinical supervisor guidance.',
+                      style: TextStyle(
+                        color: ink,
+                        height: 1.4,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
+            const Text(
+              'Evidence source',
+              style: TextStyle(color: ink, fontWeight: FontWeight.w900),
+            ),
+            const SizedBox(height: 5),
+            ...lesson.references.map(
+              (r) => Text(r, style: const TextStyle(color: muted)),
+            ),
+            const SizedBox(height: 26),
+            FilledButton.icon(
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => QuestionScreen(
+                    question: SampleRepository.questions.first,
+                    state: state,
+                  ),
+                ),
+              ),
+              icon: const Icon(Icons.arrow_forward_rounded),
+              label: const Text('Check my understanding'),
+            ),
+          ],
+        ),
+      ),
+    ),
   );
 }
 
-class PracticeHub extends StatelessWidget {
-  const PracticeHub({required this.state, super.key});
-  final AppState state;
+class _LessonSection extends StatelessWidget {
+  const _LessonSection({required this.index, required this.text});
+  final int index;
+  final String text;
   @override
-  Widget build(BuildContext context) => ListView(padding: const EdgeInsets.fromLTRB(20, 22, 20, 26), children: [
-    const Text('Practice smarter', style: TextStyle(fontSize: 27, color: _ink, fontWeight: FontWeight.w800)),
-    const SizedBox(height: 6), const Text('Turn your weak areas into your strongest subjects.'), const SizedBox(height: 22),
-    _PracticeAction(icon: Icons.bolt_rounded, tint: const Color(0xffFFF1D6), title: 'Daily 10', subtitle: 'A focused free practice set for today', onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => QuestionScreen(question: SampleRepository.questions.first, state: state)))),
-    _PracticeAction(icon: Icons.tune_rounded, tint: const Color(0xffE6F4FF), title: 'Create a quiz', subtitle: 'Choose a course, topic and difficulty', onTap: () {}),
-    _PracticeAction(icon: Icons.timer_outlined, tint: const Color(0xffE5F8F2), title: 'Semester mock', subtitle: 'Practice under exam conditions', onTap: () {}),
-    _PracticeAction(icon: Icons.replay_rounded, tint: const Color(0xffFDE9EF), title: 'Review mistakes', subtitle: state.incorrect.isEmpty ? 'Nothing to review yet' : '${state.incorrect.length} question waiting for you', onTap: () {}),
-    const SizedBox(height: 18), Container(padding: const EdgeInsets.all(18), decoration: BoxDecoration(color: const Color(0xffFFF8E9), borderRadius: BorderRadius.circular(20)), child: const Row(children: [Icon(Icons.lightbulb_outline_rounded, color: Color(0xffA66700)), SizedBox(width: 12), Expanded(child: Text('Active recall beats rereading. Test yourself after every lesson.', style: TextStyle(color: _ink, fontWeight: FontWeight.w700, height: 1.4)))])),
-  ]);
-}
-
-class _PracticeAction extends StatelessWidget {
-  const _PracticeAction({required this.icon, required this.tint, required this.title, required this.subtitle, required this.onTap});
-  final IconData icon;
-  final Color tint;
-  final String title;
-  final String subtitle;
-  final VoidCallback onTap;
-  @override
-  Widget build(BuildContext context) => Padding(padding: const EdgeInsets.only(bottom: 12), child: InkWell(onTap: onTap, borderRadius: BorderRadius.circular(20), child: Ink(padding: const EdgeInsets.all(16), decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20), border: Border.all(color: _line)), child: Row(children: [Container(width: 48, height: 48, decoration: BoxDecoration(color: tint, borderRadius: BorderRadius.circular(15)), child: Icon(icon, color: _ink)), const SizedBox(width: 14), Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(title, style: const TextStyle(color: _ink, fontWeight: FontWeight.w800)), const SizedBox(height: 4), Text(subtitle, style: const TextStyle(color: _muted, fontSize: 12))])), const Icon(Icons.arrow_forward_ios_rounded, color: _muted, size: 16)]))));
+  Widget build(BuildContext context) {
+    final titles = ['Why this matters', 'The five moments', 'Apply it safely'];
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 22),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            titles[index % titles.length],
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
+          const SizedBox(height: 8),
+          Text(text, style: Theme.of(context).textTheme.bodyLarge),
+        ],
+      ),
+    );
+  }
 }
 
 class QuestionScreen extends StatefulWidget {
-  const QuestionScreen({required this.question, required this.state, super.key});
+  const QuestionScreen({
+    required this.question,
+    required this.state,
+    super.key,
+  });
   final Mcq question;
   final AppState state;
   @override
@@ -428,65 +1591,335 @@ class QuestionScreen extends StatefulWidget {
 class _QuestionScreenState extends State<QuestionScreen> {
   int? selected;
   @override
-  Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(backgroundColor: _canvas, surfaceTintColor: Colors.transparent, title: const Text('Quick check', style: TextStyle(color: _ink, fontWeight: FontWeight.w800))),
-    body: ListView(padding: const EdgeInsets.all(20), children: [
-      const Row(children: [Text('QUESTION 1 OF 1', style: TextStyle(color: _deepMint, letterSpacing: .8, fontWeight: FontWeight.w800, fontSize: 11)), Spacer(), Text('Foundation', style: TextStyle(color: _muted, fontSize: 12, fontWeight: FontWeight.w700))]),
-      const SizedBox(height: 17), Text(widget.question.stem, style: Theme.of(context).textTheme.headlineMedium), const SizedBox(height: 22),
-      RadioGroup<int>(groupValue: selected, onChanged: selected == null ? (value) { if (value != null) { setState(() => selected = value); widget.state.recordAnswer(widget.question, value); } } : (_) {}, child: Column(children: [for (var index = 0; index < widget.question.options.length; index++) _QuestionOption(index: index, label: widget.question.options[index], selected: selected, correct: widget.question.correctIndex)])),
-      if (selected != null) ...[
-        const SizedBox(height: 18),
-        Container(padding: const EdgeInsets.all(18), decoration: BoxDecoration(color: selected == widget.question.correctIndex ? const Color(0xffE3F7F1) : const Color(0xffFFF1E1), borderRadius: BorderRadius.circular(20)), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(selected == widget.question.correctIndex ? 'That’s right.' : 'Almost — review this.', style: TextStyle(color: selected == widget.question.correctIndex ? _deepMint : const Color(0xffB45C00), fontSize: 17, fontWeight: FontWeight.w800)), const SizedBox(height: 8), Text(widget.question.rationales[selected!], style: const TextStyle(color: _ink, height: 1.45))])),
-        const SizedBox(height: 16),
-        FilledButton.icon(
-          onPressed: () => Navigator.of(context).popUntil((route) => route.isFirst),
-          style: FilledButton.styleFrom(backgroundColor: _deepMint, foregroundColor: Colors.white, padding: const EdgeInsets.symmetric(vertical: 16), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))),
-          icon: const Icon(Icons.check_circle_outline_rounded),
-          label: const Text('Finish activity'),
-        ),
-      ],
-    ]),
-  );
-}
-
-class _QuestionOption extends StatelessWidget {
-  const _QuestionOption({required this.index, required this.label, required this.selected, required this.correct});
-  final int index;
-  final String label;
-  final int? selected;
-  final int correct;
-  @override
   Widget build(BuildContext context) {
-    final active = selected == index;
-    final correctAnswer = selected != null && index == correct;
-    final wrong = active && selected != correct;
-    final color = correctAnswer ? _deepMint : wrong ? const Color(0xffD06A3A) : active ? _ink : _line;
-    return Padding(padding: const EdgeInsets.only(bottom: 10), child: Material(color: Colors.transparent, child: InkWell(borderRadius: BorderRadius.circular(16), onTap: selected == null ? () => RadioGroup.maybeOf<int>(context)?.onChanged(index) : null, child: Container(padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 13), decoration: BoxDecoration(color: active || correctAnswer ? color.withValues(alpha: .08) : Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: color, width: active || correctAnswer ? 1.6 : 1)), child: Row(children: [Container(width: 27, height: 27, alignment: Alignment.center, decoration: BoxDecoration(color: active || correctAnswer ? color : const Color(0xffF1F5F5), shape: BoxShape.circle), child: Text(String.fromCharCode(65 + index), style: TextStyle(color: active || correctAnswer ? Colors.white : _muted, fontWeight: FontWeight.w800))), const SizedBox(width: 12), Expanded(child: Text(label, style: const TextStyle(color: _ink, fontWeight: FontWeight.w600)))])))),
+    final answered = selected != null;
+    final correct = selected == widget.question.correctIndex;
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: canvas,
+        surfaceTintColor: Colors.transparent,
+        title: const Text(
+          'Quick check',
+          style: TextStyle(fontWeight: FontWeight.w900),
+        ),
+      ),
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 850),
+          child: ListView(
+            padding: const EdgeInsets.fromLTRB(22, 12, 22, 40),
+            children: [
+              const Row(
+                children: [
+                  Expanded(
+                    child: LinearProgressIndicator(
+                      value: 1,
+                      minHeight: 6,
+                      borderRadius: BorderRadius.all(Radius.circular(8)),
+                      backgroundColor: line,
+                      color: teal,
+                    ),
+                  ),
+                  SizedBox(width: 12),
+                  Text(
+                    '1 OF 1',
+                    style: TextStyle(
+                      color: muted,
+                      fontSize: 11,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 28),
+              const Text(
+                'PATIENT SAFETY • QUICK RECALL',
+                style: TextStyle(
+                  color: teal,
+                  fontSize: 11,
+                  letterSpacing: .8,
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
+              const SizedBox(height: 10),
+              Text(
+                widget.question.stem,
+                style: Theme.of(context).textTheme.headlineMedium,
+              ),
+              const SizedBox(height: 22),
+              for (var i = 0; i < widget.question.options.length; i++)
+                _AnswerOption(
+                  index: i,
+                  label: widget.question.options[i],
+                  selected: selected,
+                  correct: widget.question.correctIndex,
+                  onTap: answered
+                      ? null
+                      : () {
+                          setState(() => selected = i);
+                          widget.state.recordAnswer(widget.question, i);
+                        },
+                ),
+              if (answered) ...[
+                const SizedBox(height: 10),
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: correct
+                        ? const Color(0xffE0F6EF)
+                        : const Color(0xffFFF0E4),
+                    borderRadius: BorderRadius.circular(22),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(
+                            correct
+                                ? Icons.check_circle_rounded
+                                : Icons.refresh_rounded,
+                            color: correct ? teal : const Color(0xffB96519),
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            correct
+                                ? 'Correct — well done'
+                                : 'Review and remember',
+                            style: TextStyle(
+                              color: correct ? teal : const Color(0xffB96519),
+                              fontSize: 17,
+                              fontWeight: FontWeight.w900,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 9),
+                      Text(
+                        widget.question.rationales[selected!],
+                        style: const TextStyle(color: ink, height: 1.5),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 16),
+                FilledButton.icon(
+                  onPressed: () =>
+                      Navigator.of(context).popUntil((route) => route.isFirst),
+                  icon: const Icon(Icons.check_rounded),
+                  label: const Text('Finish activity'),
+                ),
+              ],
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
 
-class ProfilePage extends StatelessWidget {
-  const ProfilePage({required this.state, super.key});
-  final AppState state;
+class _AnswerOption extends StatelessWidget {
+  const _AnswerOption({
+    required this.index,
+    required this.label,
+    required this.selected,
+    required this.correct,
+    required this.onTap,
+  });
+  final int index, correct;
+  final String label;
+  final int? selected;
+  final VoidCallback? onTap;
   @override
-  Widget build(BuildContext context) => ListView(padding: const EdgeInsets.fromLTRB(20, 22, 20, 26), children: [
-    const Text('Your space', style: TextStyle(fontSize: 27, color: _ink, fontWeight: FontWeight.w800)), const SizedBox(height: 18),
-    Container(padding: const EdgeInsets.all(18), decoration: BoxDecoration(color: _ink, borderRadius: BorderRadius.circular(24)), child: const Row(children: [CircleAvatar(radius: 25, backgroundColor: _mint, child: Icon(Icons.person_rounded, color: _ink, size: 28)), SizedBox(width: 14), Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text('Your BSN journey starts here', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 17)), SizedBox(height: 3), Text('Sign in to save your plan across devices', style: TextStyle(color: Color(0xffB8CBD3), fontSize: 13))]))])),
-    const SizedBox(height: 20),
-    _ProfileRow(icon: Icons.cloud_sync_outlined, title: 'Study progress', detail: '${state.progress.length} activities saved locally'),
-    _ProfileRow(icon: Icons.download_done_outlined, title: 'Offline downloads', detail: 'Semester packages will appear here'),
-    _ProfileRow(icon: Icons.workspace_premium_outlined, title: 'Your access', detail: state.entitlements.isEmpty ? 'Free learning plan' : 'Semester access active'),
-    _ProfileRow(icon: Icons.settings_outlined, title: 'Study preferences', detail: 'Reminders and examination date'),
-    _ProfileRow(icon: Icons.privacy_tip_outlined, title: 'Privacy and support', detail: 'Manage your account or report a concern'),
-  ]);
+  Widget build(BuildContext context) {
+    final chosen = selected == index,
+        correctOption = selected != null && correct == index,
+        wrong = chosen && index != correct;
+    final color = correctOption
+        ? teal
+        : wrong
+        ? const Color(0xffC45E36)
+        : line;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 11),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(18),
+          child: Ink(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: correctOption
+                  ? const Color(0xffE5F7F1)
+                  : wrong
+                  ? const Color(0xffFFF0EA)
+                  : Colors.white,
+              borderRadius: BorderRadius.circular(18),
+              border: Border.all(
+                color: color,
+                width: chosen || correctOption ? 1.7 : 1,
+              ),
+            ),
+            child: Row(
+              children: [
+                Container(
+                  width: 32,
+                  height: 32,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: chosen || correctOption
+                        ? color
+                        : const Color(0xffEFF4F3),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Text(
+                    String.fromCharCode(65 + index),
+                    style: TextStyle(
+                      color: chosen || correctOption ? Colors.white : muted,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 13),
+                Expanded(
+                  child: Text(
+                    label,
+                    style: const TextStyle(
+                      color: ink,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+                if (correctOption) const Icon(Icons.check_rounded, color: teal),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }
 
-class _ProfileRow extends StatelessWidget {
-  const _ProfileRow({required this.icon, required this.title, required this.detail});
-  final IconData icon;
-  final String title;
-  final String detail;
+class _Logo extends StatelessWidget {
+  const _Logo({this.light = false});
+  final bool light;
   @override
-  Widget build(BuildContext context) => Container(margin: const EdgeInsets.only(bottom: 10), padding: const EdgeInsets.all(15), decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(18), border: Border.all(color: _line)), child: Row(children: [Icon(icon, color: _deepMint), const SizedBox(width: 13), Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(title, style: const TextStyle(color: _ink, fontWeight: FontWeight.w800)), const SizedBox(height: 3), Text(detail, style: const TextStyle(color: _muted, fontSize: 12))])), const Icon(Icons.chevron_right_rounded, color: _muted)]));
+  Widget build(BuildContext context) => Row(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      Container(
+        width: 44,
+        height: 44,
+        decoration: BoxDecoration(
+          color: light ? const Color(0xff1F5266) : navy,
+          borderRadius: BorderRadius.circular(15),
+        ),
+        child: const Stack(
+          alignment: Alignment.center,
+          children: [
+            Icon(Icons.favorite_rounded, color: mint, size: 22),
+            Positioned(
+              bottom: 7,
+              child: Text(
+                '+',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+      const SizedBox(width: 11),
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'NURSEPATH',
+            style: TextStyle(
+              color: light ? Colors.white : ink,
+              letterSpacing: .8,
+              fontWeight: FontWeight.w900,
+            ),
+          ),
+          const Text(
+            'Pakistan',
+            style: TextStyle(
+              color: mint,
+              fontSize: 12,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+        ],
+      ),
+    ],
+  );
+}
+
+class _CircleButton extends StatelessWidget {
+  const _CircleButton({required this.icon, required this.onTap});
+  final IconData icon;
+  final VoidCallback onTap;
+  @override
+  Widget build(BuildContext context) => IconButton(
+    onPressed: onTap,
+    icon: Icon(icon),
+    style: IconButton.styleFrom(
+      backgroundColor: Colors.white,
+      foregroundColor: navy,
+      side: const BorderSide(color: line),
+    ),
+  );
+}
+
+class _SectionTitle extends StatelessWidget {
+  const _SectionTitle({required this.title, this.action, this.onTap});
+  final String title;
+  final String? action;
+  final VoidCallback? onTap;
+  @override
+  Widget build(BuildContext context) => Row(
+    children: [
+      Expanded(
+        child: Text(title, style: Theme.of(context).textTheme.titleLarge),
+      ),
+      if (action != null) TextButton(onPressed: onTap, child: Text(action!)),
+    ],
+  );
+}
+
+class _PageHeader extends StatelessWidget {
+  const _PageHeader({
+    required this.kicker,
+    required this.title,
+    required this.subtitle,
+  });
+  final String kicker, title, subtitle;
+  @override
+  Widget build(BuildContext context) => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        kicker,
+        style: const TextStyle(
+          color: teal,
+          fontSize: 11,
+          letterSpacing: 1,
+          fontWeight: FontWeight.w900,
+        ),
+      ),
+      const SizedBox(height: 7),
+      Text(title, style: Theme.of(context).textTheme.displaySmall),
+      const SizedBox(height: 8),
+      ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 650),
+        child: Text(
+          subtitle,
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 15),
+        ),
+      ),
+    ],
+  );
 }
