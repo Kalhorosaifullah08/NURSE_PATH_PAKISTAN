@@ -1,6 +1,69 @@
 import '../domain/models.dart';
 
 class SampleRepository {
+  static const semesterOneCredits = 17;
+
+  static const courseCredits = <String, String>{
+    's1-fon': '3 credits • 2 theory + 1 skills lab',
+    's1-anatomy': '3 credits • 2.5 theory + 0.5 lab',
+    's1-microbiology': '2 credits • 1.5 theory + 0.5 lab',
+    's1-biochemistry': '2 credits • 1.5 theory + 0.5 lab',
+    's1-english': '3 theory credits',
+    's1-ict': '2 credits • 1 theory + 1 lab',
+    's1-pakistan': '2 theory credits',
+  };
+
+  static const courseOutcomes = <String, List<String>>{
+    's1-fon': [
+      'Explain the development, professional role and scope of nursing in Pakistan.',
+      'Use health models, patient needs and the nursing process to prioritize care.',
+      'Demonstrate safe fundamental nursing procedures and therapeutic communication.',
+      'Include cultural, spiritual and bio-psychosocial factors in nursing decisions.',
+    ],
+    's1-anatomy': [
+      'Connect the structure and function of the integumentary, musculoskeletal, circulatory and digestive systems.',
+      'Explain how homeostasis maintains normal body function.',
+      'Apply anatomy and physiology concepts to nursing observations and care.',
+    ],
+    's1-microbiology': [
+      'Classify common disease-causing microorganisms.',
+      'Compare methods used to detect, control and destroy microbes.',
+      'Apply infection-control practices in hospital and community settings.',
+      'Perform basic microbiology laboratory procedures safely.',
+    ],
+    's1-biochemistry': [
+      'Differentiate proteins, carbohydrates, lipids, enzymes and hormones.',
+      'Explain their roles in metabolism and normal physiology.',
+      'Relate core biochemical processes to nursing care.',
+      'Interpret basic biochemical test reports in clinical context.',
+    ],
+    's1-english': [
+      'Communicate clearly in academic and clinical settings.',
+      'Build accurate sentences, paragraphs and professional messages.',
+      'Read, summarize and reference information responsibly.',
+    ],
+    's1-ict': [
+      'Use computers, internet research and cloud tools responsibly.',
+      'Create clear documents, spreadsheets and presentations.',
+      'Apply digital safety and information-literacy principles to study and healthcare.',
+    ],
+    's1-pakistan': [
+      'Explain the ideological foundations of Pakistan.',
+      'Recognize the structure, rights and responsibilities described by the Constitution.',
+      'Relate citizenship and constitutional principles to professional conduct.',
+    ],
+  };
+
+  static const courseSources = <String, String>{
+    's1-fon': 'HEC BSN 2024 • Open RN Nursing Fundamentals',
+    's1-anatomy': 'HEC BSN 2024 • OpenStax Anatomy & Physiology 2e',
+    's1-microbiology': 'HEC BSN 2024 • OpenStax Microbiology',
+    's1-biochemistry': 'HEC BSN 2024 • OpenStax Biology 2e',
+    's1-english': 'HEC Undergraduate Policy • OpenStax Writing Guide',
+    's1-ict': 'HEC Undergraduate Policy • OpenStax Workplace Software Skills',
+    's1-pakistan': 'HEC Undergraduate Policy • Constitution of Pakistan',
+  };
+
   static const courses = <CourseSummary>[
     CourseSummary(
       id: 's1-fon',

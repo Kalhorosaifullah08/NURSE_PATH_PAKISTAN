@@ -749,6 +749,10 @@ class LibraryPage extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 24),
+        if (state.selectedSemester == 1) ...[
+          const _SemesterOneOverview(),
+          const SizedBox(height: 24),
+        ],
         Row(
           children: [
             Expanded(
@@ -783,6 +787,89 @@ class LibraryPage extends StatelessWidget {
       ],
     );
   }
+}
+
+class _SemesterOneOverview extends StatelessWidget {
+  const _SemesterOneOverview();
+
+  @override
+  Widget build(BuildContext context) => Container(
+    padding: const EdgeInsets.all(22),
+    decoration: BoxDecoration(
+      gradient: const LinearGradient(colors: [navy2, navy]),
+      borderRadius: BorderRadius.circular(28),
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'SEMESTER ONE AT A GLANCE',
+          style: TextStyle(
+            color: mint,
+            fontSize: 11,
+            letterSpacing: 1,
+            fontWeight: FontWeight.w900,
+          ),
+        ),
+        const SizedBox(height: 8),
+        const Text(
+          'Your complete first-semester pathway',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 23,
+            fontWeight: FontWeight.w900,
+          ),
+        ),
+        const SizedBox(height: 8),
+        const Text(
+          'Explore every course, its official outcomes, credit load and evidence sources. Reviewed lessons and questions appear inside each course as they become ready.',
+          style: TextStyle(color: Color(0xffC1D3DA), height: 1.45),
+        ),
+        const SizedBox(height: 18),
+        const Wrap(
+          spacing: 10,
+          runSpacing: 10,
+          children: [
+            _OverviewPill(icon: Icons.menu_book_rounded, label: '7 courses'),
+            _OverviewPill(icon: Icons.school_rounded, label: '17 credits'),
+            _OverviewPill(
+              icon: Icons.verified_rounded,
+              label: 'HEC 2024 mapped',
+            ),
+          ],
+        ),
+      ],
+    ),
+  );
+}
+
+class _OverviewPill extends StatelessWidget {
+  const _OverviewPill({required this.icon, required this.label});
+  final IconData icon;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) => Container(
+    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
+    decoration: BoxDecoration(
+      color: Colors.white.withValues(alpha: .1),
+      borderRadius: BorderRadius.circular(14),
+    ),
+    child: Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(icon, color: mint, size: 17),
+        const SizedBox(width: 7),
+        Text(
+          label,
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w800,
+          ),
+        ),
+      ],
+    ),
+  );
 }
 
 class _CourseCard extends StatelessWidget {
@@ -845,9 +932,8 @@ class _CourseCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 6),
                     Text(
-                      ready
-                          ? '1 unit ready • 35% complete'
-                          : 'Curriculum mapped • review pending',
+                      SampleRepository.courseCredits[course.id] ??
+                          (ready ? '1 unit ready' : 'Curriculum mapped'),
                       style: const TextStyle(color: muted, fontSize: 12),
                     ),
                     const SizedBox(height: 10),
@@ -862,7 +948,9 @@ class _CourseCard extends StatelessWidget {
                         ),
                         const SizedBox(width: 5),
                         Text(
-                          ready ? 'Continue studying' : 'Coming after review',
+                          ready
+                              ? 'Open course and study'
+                              : 'View course outline',
                           style: TextStyle(
                             color: ready ? teal : muted,
                             fontSize: 12,
@@ -1199,6 +1287,10 @@ class CourseScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ready = course.id == SampleRepository.lesson.courseId;
+    final outcomes =
+        SampleRepository.courseOutcomes[course.id] ?? const <String>[];
+    final credits = SampleRepository.courseCredits[course.id];
+    final sources = SampleRepository.courseSources[course.id];
     return Scaffold(
       appBar: AppBar(
         backgroundColor: canvas,
@@ -1241,7 +1333,7 @@ class CourseScreen extends StatelessWidget {
                     Text(
                       ready
                           ? 'Build safe nursing foundations through short lessons and active recall.'
-                          : 'This course is academically mapped and awaiting final content review.',
+                          : 'Review the complete curriculum outline now. Detailed lessons will be added after academic review.',
                       style: const TextStyle(
                         color: Color(0xffC1D3DA),
                         height: 1.45,
@@ -1251,6 +1343,65 @@ class CourseScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 24),
+              if (credits != null) ...[
+                _CourseInfoStrip(credits: credits, ready: ready),
+                const SizedBox(height: 24),
+              ],
+              if (outcomes.isNotEmpty) ...[
+                Text(
+                  'What you will learn',
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                const SizedBox(height: 12),
+                Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      children: [
+                        for (var i = 0; i < outcomes.length; i++)
+                          Padding(
+                            padding: EdgeInsets.only(
+                              bottom: i == outcomes.length - 1 ? 0 : 14,
+                            ),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  width: 25,
+                                  height: 25,
+                                  alignment: Alignment.center,
+                                  decoration: const BoxDecoration(
+                                    color: Color(0xffE1F5EF),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Text(
+                                    '${i + 1}',
+                                    style: const TextStyle(
+                                      color: teal,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w900,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Text(
+                                    outcomes[i],
+                                    style: const TextStyle(
+                                      color: ink,
+                                      height: 1.4,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 24),
+              ],
               Text('Study path', style: Theme.of(context).textTheme.titleLarge),
               const SizedBox(height: 12),
               if (ready) ...[
@@ -1283,13 +1434,140 @@ class CourseScreen extends StatelessWidget {
                   ),
                 ),
               ] else
-                const _LockedSemester(),
+                const _ContentReviewNotice(),
+              if (sources != null) ...[
+                const SizedBox(height: 24),
+                Text(
+                  'Curriculum & evidence',
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                const SizedBox(height: 10),
+                Card(
+                  child: ListTile(
+                    contentPadding: const EdgeInsets.all(18),
+                    leading: const Icon(
+                      Icons.verified_user_rounded,
+                      color: teal,
+                    ),
+                    title: Text(
+                      sources,
+                      style: const TextStyle(fontWeight: FontWeight.w800),
+                    ),
+                    subtitle: const Padding(
+                      padding: EdgeInsets.only(top: 5),
+                      child: Text(
+                        'Course mapping is visible now; generated clinical content remains subject to academic review.',
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ],
           ),
         ),
       ),
     );
   }
+}
+
+class _CourseInfoStrip extends StatelessWidget {
+  const _CourseInfoStrip({required this.credits, required this.ready});
+  final String credits;
+  final bool ready;
+
+  @override
+  Widget build(BuildContext context) => Card(
+    child: Padding(
+      padding: const EdgeInsets.all(18),
+      child: Wrap(
+        spacing: 22,
+        runSpacing: 14,
+        children: [
+          _InfoPair(
+            icon: Icons.school_rounded,
+            label: 'Credit load',
+            value: credits,
+          ),
+          _InfoPair(
+            icon: ready ? Icons.play_circle_rounded : Icons.fact_check_rounded,
+            label: 'Content status',
+            value: ready
+                ? 'Lesson available'
+                : 'Outline available • lessons in review',
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+class _InfoPair extends StatelessWidget {
+  const _InfoPair({
+    required this.icon,
+    required this.label,
+    required this.value,
+  });
+  final IconData icon;
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) => Row(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      Icon(icon, color: teal),
+      const SizedBox(width: 10),
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: const TextStyle(
+              color: muted,
+              fontSize: 11,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          const SizedBox(height: 2),
+          Text(
+            value,
+            style: const TextStyle(color: ink, fontWeight: FontWeight.w900),
+          ),
+        ],
+      ),
+    ],
+  );
+}
+
+class _ContentReviewNotice extends StatelessWidget {
+  const _ContentReviewNotice();
+
+  @override
+  Widget build(BuildContext context) => Container(
+    padding: const EdgeInsets.all(22),
+    decoration: BoxDecoration(
+      color: const Color(0xffFFF6E8),
+      borderRadius: BorderRadius.circular(22),
+      border: Border.all(color: const Color(0xffF1D6A8)),
+    ),
+    child: const Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(Icons.rate_review_rounded, color: Color(0xff9A6412)),
+        SizedBox(width: 12),
+        Expanded(
+          child: Text(
+            'Detailed lessons, diagrams and questions are being checked for academic and clinical accuracy. The official course outcomes and evidence map above are available now.',
+            style: TextStyle(
+              color: ink,
+              height: 1.45,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
 }
 
 class _StudyStep extends StatelessWidget {
