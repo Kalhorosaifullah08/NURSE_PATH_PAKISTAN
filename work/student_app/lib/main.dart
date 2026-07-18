@@ -213,35 +213,24 @@ class _DesktopNav extends StatelessWidget {
         ])
           Padding(
             padding: const EdgeInsets.only(bottom: 7),
-            child: ListTile(
-              selected:
-                  selected ==
-                  const [
-                    'Today',
-                    'Learn',
-                    'Practice',
-                    'Profile',
-                  ].indexOf(item.$2),
-              selectedTileColor: const Color(0xff24566A),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              leading: Icon(
-                item.$1,
-                color:
+            child: Material(
+              color: Colors.transparent,
+              borderRadius: BorderRadius.circular(16),
+              child: ListTile(
+                selected:
                     selected ==
-                        const [
-                          'Today',
-                          'Learn',
-                          'Practice',
-                          'Profile',
-                        ].indexOf(item.$2)
-                    ? mint
-                    : const Color(0xffAFC4CD),
-              ),
-              title: Text(
-                item.$2,
-                style: TextStyle(
+                    const [
+                      'Today',
+                      'Learn',
+                      'Practice',
+                      'Profile',
+                    ].indexOf(item.$2),
+                selectedTileColor: const Color(0xff24566A),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                leading: Icon(
+                  item.$1,
                   color:
                       selected ==
                           const [
@@ -250,18 +239,33 @@ class _DesktopNav extends StatelessWidget {
                             'Practice',
                             'Profile',
                           ].indexOf(item.$2)
-                      ? Colors.white
-                      : const Color(0xffC0D0D6),
-                  fontWeight: FontWeight.w700,
+                      ? mint
+                      : const Color(0xffAFC4CD),
                 ),
-              ),
-              onTap: () => onChanged(
-                const [
-                  'Today',
-                  'Learn',
-                  'Practice',
-                  'Profile',
-                ].indexOf(item.$2),
+                title: Text(
+                  item.$2,
+                  style: TextStyle(
+                    color:
+                        selected ==
+                            const [
+                              'Today',
+                              'Learn',
+                              'Practice',
+                              'Profile',
+                            ].indexOf(item.$2)
+                        ? Colors.white
+                        : const Color(0xffC0D0D6),
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                onTap: () => onChanged(
+                  const [
+                    'Today',
+                    'Learn',
+                    'Practice',
+                    'Profile',
+                  ].indexOf(item.$2),
+                ),
               ),
             ),
           ),
@@ -318,7 +322,7 @@ class HomePage extends StatelessWidget {
           final wide = box.maxWidth > 760;
           return wide
               ? Row(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Expanded(flex: 7, child: _Hero(state: state)),
                     const SizedBox(width: 18),
@@ -2111,26 +2115,30 @@ class _Logo extends StatelessWidget {
         ),
       ),
       const SizedBox(width: 11),
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'NURSEPATH',
-            style: TextStyle(
-              color: light ? Colors.white : ink,
-              letterSpacing: .8,
-              fontWeight: FontWeight.w900,
+      Flexible(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'NURSEPATH',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                color: light ? Colors.white : ink,
+                letterSpacing: .8,
+                fontWeight: FontWeight.w900,
+              ),
             ),
-          ),
-          const Text(
-            'Pakistan',
-            style: TextStyle(
-              color: mint,
-              fontSize: 12,
-              fontWeight: FontWeight.w800,
+            const Text(
+              'Pakistan',
+              style: TextStyle(
+                color: mint,
+                fontSize: 12,
+                fontWeight: FontWeight.w800,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     ],
   );
