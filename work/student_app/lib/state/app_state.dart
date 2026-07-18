@@ -23,18 +23,24 @@ class AppState extends ChangeNotifier {
   void recordAnswer(Mcq question, int selected) {
     final correct = selected == question.correctIndex;
     if (!correct) incorrect.add(question.id);
-    progress.add(ProgressEvent(
-      id: '${question.id}-${DateTime.now().microsecondsSinceEpoch}',
-      itemId: question.id,
-      kind: 'mcq',
-      occurredAt: DateTime.now().toUtc(),
-      score: correct ? 1 : 0,
-    ));
+    progress.add(
+      ProgressEvent(
+        id: '${question.id}-${DateTime.now().microsecondsSinceEpoch}',
+        itemId: question.id,
+        kind: 'mcq',
+        occurredAt: DateTime.now().toUtc(),
+        score: correct ? 1 : 0,
+      ),
+    );
     notifyListeners();
   }
 
   void grantTestEntitlement(int semester) {
-    entitlements[semester] = Entitlement(semester: semester, active: true, source: 'license-test');
+    entitlements[semester] = Entitlement(
+      semester: semester,
+      active: true,
+      source: 'license-test',
+    );
     notifyListeners();
   }
 }

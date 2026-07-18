@@ -1,9 +1,29 @@
-enum RiskLevel { general, academic, clinical, pharmacology, calculation, emergency, patientSafety }
+enum RiskLevel {
+  general,
+  academic,
+  clinical,
+  pharmacology,
+  calculation,
+  emergency,
+  patientSafety,
+}
 
-enum ReviewState { draft, automatedReview, ownerReview, approved, rejected, published }
+enum ReviewState {
+  draft,
+  automatedReview,
+  ownerReview,
+  approved,
+  rejected,
+  published,
+}
 
 class CourseSummary {
-  const CourseSummary({required this.id, required this.title, required this.semester, required this.isSample});
+  const CourseSummary({
+    required this.id,
+    required this.title,
+    required this.semester,
+    required this.isSample,
+  });
   final String id;
   final String title;
   final int semester;
@@ -55,7 +75,13 @@ class Mcq {
 }
 
 class ProgressEvent {
-  const ProgressEvent({required this.id, required this.itemId, required this.kind, required this.occurredAt, required this.score});
+  const ProgressEvent({
+    required this.id,
+    required this.itemId,
+    required this.kind,
+    required this.occurredAt,
+    required this.score,
+  });
   final String id;
   final String itemId;
   final String kind;
@@ -64,7 +90,11 @@ class ProgressEvent {
 }
 
 class Entitlement {
-  const Entitlement({required this.semester, required this.active, required this.source});
+  const Entitlement({
+    required this.semester,
+    required this.active,
+    required this.source,
+  });
   final int semester;
   final bool active;
   final String source;

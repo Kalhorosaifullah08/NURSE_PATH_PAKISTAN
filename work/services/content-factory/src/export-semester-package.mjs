@@ -1,11 +1,14 @@
-import { mkdir, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { initializeApp, applicationDefault } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
 import { createHash } from 'node:crypto';
 
 const semester = Number(process.argv[2] ?? 1);
-const destination = resolve(process.argv[3] ?? `../../student_app/assets/content/semester-${semester}.json`);
+const assetDestination = resolve(process.argv[3] ?? `../../student_app/assets/content/semester-${semester}.json`);
+const hostingDestination = resolve(`../../student_app/web/content/semester-${semester}.json`);
+const assetManifestPath = resolve('../../student_app/assets/content/manifest.json');
+const hostingManifestPath = resolve('../../student_app/web/content/manifest.json');
 
 if (!Number.isInteger(semester) || semester < 1 || semester > 8) {
   throw new Error('Semester must be an integer between 1 and 8.');
@@ -58,6 +61,22 @@ const packageFile = {
   sha256: createHash('sha256').update(canonical).digest('hex'),
 };
 
-await mkdir(dirname(destination), { recursive: true });
-await writeFile(destination, `${JSON.stringify(packageFile, null, 2)}\n`, 'utf8');
-console.log(JSON.stringify({ destination, itemCount: items.length, counts }, null, 2));
+const serialized = `${JSON.stringify(packageFile, null, 2)}\n`;
+for (const destination of [assetDestination, hostingDestination]) {
+  await mkdir(dirname(destination), { recursive: true });
+  await writeFile(destination, serialized, 'utf8');
+}
+
+const manifest = JSON.parse(await readFile(assetManifestPath, 'utf8'));
+const status = manifest.semesters.find(item => item.semester === semester);
+if (!status) throw new Error(`Semester ${semester} is missing from the manifest.`);
+status.status = 'published';
+status.packageVersion = packageFile.sha256.slice(0, 12);
+status.packageUrl = `content/semester-${semester}.json?v=${status.packageVersion}`;
+status.itemCount = items.length;
+status.updatedAt = packageFile.exportedAt;
+const serializedManifest = `${JSON.stringify(manifest, null, 2)}\n`;
+await writeFile(assetManifestPath, serializedManifest, 'utf8');
+await writeFile(hostingManifestPath, serializedManifest, 'utf8');
+
+console.log(JSON.stringify({ destinations: [assetDestination, hostingDestination], itemCount: items.length, counts, packageVersion: status.packageVersion }, null, 2));

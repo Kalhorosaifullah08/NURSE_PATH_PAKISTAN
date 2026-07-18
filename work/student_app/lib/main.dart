@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'data/sample_repository.dart';
+import 'data/content_repository.dart';
 import 'domain/models.dart';
 import 'state/app_state.dart';
 
@@ -735,6 +736,8 @@ class LibraryPage extends StatelessWidget {
               'Every course follows the HEC Generic BSN pathway and moves from understanding to clinical recall.',
         ),
         const SizedBox(height: 22),
+        _SemesterStatusBoard(selectedSemester: state.selectedSemester),
+        const SizedBox(height: 20),
         Wrap(
           spacing: 8,
           runSpacing: 8,
@@ -791,6 +794,74 @@ class LibraryPage extends StatelessWidget {
       ],
     );
   }
+}
+
+class _SemesterStatusBoard extends StatelessWidget {
+  const _SemesterStatusBoard({required this.selectedSemester});
+  final int selectedSemester;
+
+  @override
+  Widget build(BuildContext context) => FutureBuilder<List<SemesterStatus>>(
+    future: contentRepository.manifest(),
+    builder: (context, snapshot) {
+      final statuses = snapshot.data ?? const <SemesterStatus>[];
+      final matching = statuses.where(
+        (item) => item.semester == selectedSemester,
+      );
+      if (matching.isEmpty) return const SizedBox.shrink();
+      final semester = matching.first;
+      final details = switch (semester.status) {
+        SemesterAvailability.published =>
+          '${semester.itemCount} learning items available',
+        SemesterAvailability.review =>
+          'Generation complete • academic review in progress',
+        SemesterAvailability.generating =>
+          'Content generation is running in the cloud',
+        SemesterAvailability.planned =>
+          'Curriculum mapped • generation not started',
+      };
+      final color = switch (semester.status) {
+        SemesterAvailability.published => teal,
+        SemesterAvailability.review => const Color(0xffB7791F),
+        SemesterAvailability.generating => const Color(0xff22749A),
+        SemesterAvailability.planned => muted,
+      };
+      return Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: .09),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: color.withValues(alpha: .22)),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              semester.status == SemesterAvailability.published
+                  ? Icons.cloud_done_rounded
+                  : semester.status == SemesterAvailability.generating
+                  ? Icons.auto_awesome_rounded
+                  : Icons.fact_check_rounded,
+              color: color,
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Semester $selectedSemester • ${semester.status.name.toUpperCase()}',
+                    style: TextStyle(color: color, fontWeight: FontWeight.w900),
+                  ),
+                  const SizedBox(height: 3),
+                  Text(details, style: const TextStyle(color: ink)),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    },
+  );
 }
 
 class _SemesterOneOverview extends StatelessWidget {
@@ -1466,9 +1537,212 @@ class CourseScreen extends StatelessWidget {
                   ),
                 ),
               ],
+              const SizedBox(height: 24),
+              _GeneratedCourseContent(course: course),
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _GeneratedCourseContent extends StatelessWidget {
+  const _GeneratedCourseContent({required this.course});
+  final CourseSummary course;
+
+  @override
+  Widget build(BuildContext context) => FutureBuilder<SemesterPackage?>(
+    future: contentRepository.packageFor(course.semester),
+    builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return const Center(
+          child: Padding(
+            padding: EdgeInsets.all(24),
+            child: CircularProgressIndicator(),
+          ),
+        );
+      }
+      final items =
+          snapshot.data?.forCourse(course.id) ?? const <GeneratedContentItem>[];
+      if (items.isEmpty) {
+        return Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: const Color(0xffEEF4F6),
+            borderRadius: BorderRadius.circular(22),
+          ),
+          child: const Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(Icons.inventory_2_outlined, color: muted),
+              SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  'The generated package is not published to the student channel yet. When the owner publishes it, every verified lesson, question, flashcard and test will appear here automatically.',
+                  style: TextStyle(color: ink, height: 1.45),
+                ),
+              ),
+            ],
+          ),
+        );
+      }
+      final grouped = <String, List<GeneratedContentItem>>{};
+      for (final item in items) {
+        grouped.putIfAbsent(item.type, () => []).add(item);
+      }
+      const order = [
+        'course_outline',
+        'lesson',
+        'mcq',
+        'flashcard',
+        'written_question',
+        'course_test',
+      ];
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Complete generated material',
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
+          const SizedBox(height: 12),
+          for (final type in order)
+            if (grouped[type]?.isNotEmpty ?? false)
+              _GeneratedSection(type: type, items: grouped[type]!),
+        ],
+      );
+    },
+  );
+}
+
+class _GeneratedSection extends StatelessWidget {
+  const _GeneratedSection({required this.type, required this.items});
+  final String type;
+  final List<GeneratedContentItem> items;
+
+  String get label => switch (type) {
+    'course_outline' => 'Course outline',
+    'lesson' => 'Lessons',
+    'mcq' => 'Practice questions',
+    'flashcard' => 'Flashcards',
+    'written_question' => 'Written questions',
+    'course_test' => 'Course tests',
+    _ => type,
+  };
+
+  @override
+  Widget build(BuildContext context) => Card(
+    margin: const EdgeInsets.only(bottom: 12),
+    child: ExpansionTile(
+      shape: const Border(),
+      leading: const Icon(Icons.folder_copy_rounded, color: teal),
+      title: Text(label, style: const TextStyle(fontWeight: FontWeight.w900)),
+      subtitle: Text('${items.length} items'),
+      children: [
+        for (final item in items)
+          ListTile(
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 20,
+              vertical: 4,
+            ),
+            title: Text(
+              item.body['title'] as String? ??
+                  item.body['stem'] as String? ??
+                  item.body['front'] as String? ??
+                  item.body['question'] as String? ??
+                  item.id,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+            subtitle: Text(item.risk.replaceAll('_', ' ')),
+            trailing: const Icon(Icons.chevron_right_rounded),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => GeneratedItemScreen(item: item),
+              ),
+            ),
+          ),
+      ],
+    ),
+  );
+}
+
+class GeneratedItemScreen extends StatelessWidget {
+  const GeneratedItemScreen({required this.item, super.key});
+  final GeneratedContentItem item;
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+    appBar: AppBar(title: Text(item.type.replaceAll('_', ' '))),
+    body: Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 850),
+        child: ListView(
+          padding: const EdgeInsets.all(22),
+          children: [
+            Text(
+              item.body['title'] as String? ??
+                  item.body['stem'] as String? ??
+                  item.body['front'] as String? ??
+                  item.body['question'] as String? ??
+                  item.id,
+              style: Theme.of(context).textTheme.headlineMedium,
+            ),
+            const SizedBox(height: 18),
+            for (final entry in item.body.entries)
+              if (!['title', 'stem', 'front', 'question'].contains(entry.key))
+                _GeneratedField(label: entry.key, value: entry.value),
+            const SizedBox(height: 18),
+            const Text(
+              'Generated material must remain aligned with institutional policy and clinical supervision.',
+              style: TextStyle(color: muted, fontStyle: FontStyle.italic),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
+class _GeneratedField extends StatelessWidget {
+  const _GeneratedField({required this.label, required this.value});
+  final String label;
+  final Object? value;
+
+  @override
+  Widget build(BuildContext context) {
+    final text = value is List
+        ? (value as List)
+              .map(
+                (item) => item is Map
+                    ? item.entries
+                          .map((entry) => '${entry.key}: ${entry.value}')
+                          .join('\n')
+                    : '• $item',
+              )
+              .join('\n\n')
+        : value.toString();
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 18),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label.replaceAll('_', ' ').toUpperCase(),
+            style: const TextStyle(
+              color: teal,
+              fontSize: 11,
+              fontWeight: FontWeight.w900,
+              letterSpacing: .8,
+            ),
+          ),
+          const SizedBox(height: 7),
+          Text(
+            text,
+            style: const TextStyle(color: ink, height: 1.5, fontSize: 16),
+          ),
+        ],
       ),
     );
   }
