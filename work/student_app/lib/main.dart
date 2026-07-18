@@ -434,7 +434,17 @@ class _QuestionScreenState extends State<QuestionScreen> {
       const Row(children: [Text('QUESTION 1 OF 1', style: TextStyle(color: _deepMint, letterSpacing: .8, fontWeight: FontWeight.w800, fontSize: 11)), Spacer(), Text('Foundation', style: TextStyle(color: _muted, fontSize: 12, fontWeight: FontWeight.w700))]),
       const SizedBox(height: 17), Text(widget.question.stem, style: Theme.of(context).textTheme.headlineMedium), const SizedBox(height: 22),
       RadioGroup<int>(groupValue: selected, onChanged: selected == null ? (value) { if (value != null) { setState(() => selected = value); widget.state.recordAnswer(widget.question, value); } } : (_) {}, child: Column(children: [for (var index = 0; index < widget.question.options.length; index++) _QuestionOption(index: index, label: widget.question.options[index], selected: selected, correct: widget.question.correctIndex)])),
-      if (selected != null) ...[const SizedBox(height: 18), Container(padding: const EdgeInsets.all(18), decoration: BoxDecoration(color: selected == widget.question.correctIndex ? const Color(0xffE3F7F1) : const Color(0xffFFF1E1), borderRadius: BorderRadius.circular(20)), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(selected == widget.question.correctIndex ? 'That’s right.' : 'Almost — review this.', style: TextStyle(color: selected == widget.question.correctIndex ? _deepMint : const Color(0xffB45C00), fontSize: 17, fontWeight: FontWeight.w800)), const SizedBox(height: 8), Text(widget.question.rationales[selected!], style: const TextStyle(color: _ink, height: 1.45))]))],
+      if (selected != null) ...[
+        const SizedBox(height: 18),
+        Container(padding: const EdgeInsets.all(18), decoration: BoxDecoration(color: selected == widget.question.correctIndex ? const Color(0xffE3F7F1) : const Color(0xffFFF1E1), borderRadius: BorderRadius.circular(20)), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(selected == widget.question.correctIndex ? 'That’s right.' : 'Almost — review this.', style: TextStyle(color: selected == widget.question.correctIndex ? _deepMint : const Color(0xffB45C00), fontSize: 17, fontWeight: FontWeight.w800)), const SizedBox(height: 8), Text(widget.question.rationales[selected!], style: const TextStyle(color: _ink, height: 1.45))])),
+        const SizedBox(height: 16),
+        FilledButton.icon(
+          onPressed: () => Navigator.of(context).popUntil((route) => route.isFirst),
+          style: FilledButton.styleFrom(backgroundColor: _deepMint, foregroundColor: Colors.white, padding: const EdgeInsets.symmetric(vertical: 16), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))),
+          icon: const Icon(Icons.check_circle_outline_rounded),
+          label: const Text('Finish activity'),
+        ),
+      ],
     ]),
   );
 }

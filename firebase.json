@@ -1,0 +1,21 @@
+{
+  "hosting": {
+    "public": "work/student_app/build/web",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      { "source": "**", "destination": "/index.html" }
+    ],
+    "headers": [
+      {
+        "source": "**/*.@(html|js|css|wasm|json)",
+        "headers": [
+          { "key": "Cache-Control", "value": "no-cache, must-revalidate" }
+        ]
+      }
+    ]
+  }
+}
