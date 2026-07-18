@@ -66,6 +66,13 @@ async function loadDrafts() {
 
 const drafts = await loadDrafts();
 
+const studentCourseIds = {
+  's1-fundamentals-1': 's1-fon',
+  's1-anatomy-physiology-1': 's1-anatomy',
+  's1-functional-english': 's1-english',
+  's1-pakistan-constitution': 's1-pakistan',
+};
+
 const items = drafts
   .filter(item =>
     item.automatedReview?.generatorVerifierAgreement === true &&
@@ -76,7 +83,7 @@ const items = drafts
   .map(item => ({
     id: item.id,
     semester: item.semester,
-    courseId: item.courseId,
+    courseId: studentCourseIds[item.courseId] ?? item.courseId,
     contentType: item.contentType,
     body: item.body,
     sourceIds: item.sourceIds,
