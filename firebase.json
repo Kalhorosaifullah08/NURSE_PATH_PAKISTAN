@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "work/student_app/build/web",
+    "public": "work/student_web",
     "ignore": [
       "firebase.json",
       "**/.*",

@@ -1,0 +1,69 @@
+{
+  "formatVersion": 1,
+  "semesters": [
+    {
+      "semester": 1,
+      "status": "published",
+      "packageVersion": "3156402f8fc0",
+      "packageUrl": "content/semester-1.json?v=3156402f8fc0",
+      "itemCount": 1228,
+      "updatedAt": "2026-07-18T11:56:11.852Z"
+    },
+    {
+      "semester": 2,
+      "status": "generating",
+      "packageVersion": null,
+      "packageUrl": null,
+      "itemCount": 0,
+      "updatedAt": "2026-07-18T10:00:00Z"
+    },
+    {
+      "semester": 3,
+      "status": "planned",
+      "packageVersion": null,
+      "packageUrl": null,
+      "itemCount": 0,
+      "updatedAt": null
+    },
+    {
+      "semester": 4,
+      "status": "planned",
+      "packageVersion": null,
+      "packageUrl": null,
+      "itemCount": 0,
+      "updatedAt": null
+    },
+    {
+      "semester": 5,
+      "status": "planned",
+      "packageVersion": null,
+      "packageUrl": null,
+      "itemCount": 0,
+      "updatedAt": null
+    },
+    {
+      "semester": 6,
+      "status": "planned",
+      "packageVersion": null,
+      "packageUrl": null,
+      "itemCount": 0,
+      "updatedAt": null
+    },
+    {
+      "semester": 7,
+      "status": "planned",
+      "packageVersion": null,
+      "packageUrl": null,
+      "itemCount": 0,
+      "updatedAt": null
+    },
+    {
+      "semester": 8,
+      "status": "planned",
+      "packageVersion": null,
+      "packageUrl": null,
+      "itemCount": 0,
+      "updatedAt": null
+    }
+  ]
+}
