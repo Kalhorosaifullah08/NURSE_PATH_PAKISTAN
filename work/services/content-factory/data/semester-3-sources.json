@@ -1,0 +1,18 @@
+{
+  "version": "2026-07-19-s3",
+  "sources": [
+    {"id":"hec-bsn-msn-2024","title":"HEC Curriculum of Nursing Education - BSN and MSN 2024","publisher":"Higher Education Commission, Pakistan","url":"https://www.hec.gov.pk/english/services/universities/RevisedCurricula/Documents/2023-2024/HEC%20Curriculum%20BSN-MSN%202024.pdf","license":"official-publication","scope":"Official Generic BSN Semester III structure, credits, course titles and stated course learning outcomes."},
+    {"id":"openrn-nursing-fundamentals-2e","title":"Nursing Fundamentals, 2nd edition","publisher":"Open RN / NCBI Bookshelf","url":"https://www.ncbi.nlm.nih.gov/books/NBK610815/","license":"CC-BY-4.0 (some embedded items have separate notices)","scope":"Therapeutic communication, nurse-client relationships, clinical communication, documentation and foundational patient safety. Local procedures require institutional review."},
+    {"id":"openrn-nursing-pharmacology-2e","title":"Nursing Pharmacology, 2nd edition","publisher":"Open RN / NCBI Bookshelf","url":"https://www.ncbi.nlm.nih.gov/books/NBK595000/","license":"CC-BY-4.0","scope":"Foundational pharmacokinetics, pharmacodynamics, drug classes, medication safety and nursing considerations. Doses and local legislation must not be generated without explicit authoritative support."},
+    {"id":"openrn-health-alterations","title":"Health Alterations","publisher":"Open RN / NCBI Bookshelf","url":"https://www.ncbi.nlm.nih.gov/books/NBK613076/","license":"Open RN OER; verify item-level notices","scope":"Foundational adult health alterations, disease processes, clinical judgment and person-centred nursing care. Local protocols require institutional review."},
+    {"id":"openrn-nursing-skills-2e","title":"Nursing Skills, 2nd edition","publisher":"Open RN / NCBI Bookshelf","url":"https://www.ncbi.nlm.nih.gov/books/NBK596735/","license":"CC-BY-4.0","scope":"Health history, physical assessment, documentation and entry-level nursing skills. Local checklists and procedures require institutional review."},
+    {"id":"openstax-anatomy-physiology-2e","title":"Anatomy and Physiology 2e","publisher":"OpenStax, Rice University","url":"https://openstax.org/details/books/anatomy-and-physiology-2e","license":"CC-BY-NC-SA-4.0","scope":"Normal body structure, physiology and homeostatic mechanisms used only as foundation for pathophysiology."}
+  ],
+  "courseSources": {
+    "s3-professional-communication-skills":["hec-bsn-msn-2024","openrn-nursing-fundamentals-2e"],
+    "s3-clinical-pharmacology-drug-administration-1":["hec-bsn-msn-2024","openrn-nursing-pharmacology-2e"],
+    "s3-medical-surgical-nursing-1":["hec-bsn-msn-2024","openrn-health-alterations","openrn-nursing-fundamentals-2e"],
+    "s3-health-assessment-1":["hec-bsn-msn-2024","openrn-nursing-skills-2e"],
+    "s3-pathophysiology-1":["hec-bsn-msn-2024","openrn-health-alterations","openstax-anatomy-physiology-2e"]
+  }
+}

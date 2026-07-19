@@ -1,0 +1,101 @@
+{
+  "id": "semester-3-hec-2024",
+  "semester": 3,
+  "curriculumVersion": "hec-bsn-2024",
+  "sourceLibraryVersion": "2026-07-19-s3",
+  "courses": [
+    {
+      "id": "s3-professional-communication-skills",
+      "title": "Professional Communication Skills",
+      "category": "GE",
+      "credits": 3,
+      "theory": 3,
+      "clinical": 0,
+      "lab": 0,
+      "outcomes": [
+        "Acknowledge multicultural communication differences in the nurse-client relationship.",
+        "Use active listening skills including restating, reflecting, clarifying, summarizing and empathy.",
+        "Use effective, culturally sensitive verbal and nonverbal communication with emotional intelligence.",
+        "Apply assertiveness, therapeutic communication and conflict-management principles.",
+        "Use structured clinical communication tools including SBAR, PQRSTU, PACT and DAIM.",
+        "Share information respectfully with clients and families and encourage participation in decisions."
+      ]
+    },
+    {
+      "id": "s3-clinical-pharmacology-drug-administration-1",
+      "title": "Clinical Pharmacology and Drug Administration I",
+      "category": "Major",
+      "credits": 2,
+      "theory": 2,
+      "clinical": 0,
+      "lab": 0,
+      "outcomes": [
+        "Explain core pharmacology terminology, history and principles.",
+        "Identify the purposes and sources of medications.",
+        "Differentiate major drugs and drug classes used in clinical practice.",
+        "Differentiate pharmacokinetics and pharmacodynamics.",
+        "Explain drug standards and legislation.",
+        "Explain indications, contraindications, effects and adverse effects of drugs affecting body systems.",
+        "Design and modify appropriate dosing regimens for specific patient populations within the learner scope."
+      ]
+    },
+    {
+      "id": "s3-medical-surgical-nursing-1",
+      "title": "Medical Surgical Nursing I",
+      "category": "Major",
+      "credits": 7,
+      "theory": 3,
+      "clinical": 3,
+      "lab": 1,
+      "outcomes": [
+        "Apply integrated basic, clinical and nursing sciences when caring for adults with medical-surgical conditions.",
+        "Use clinical reasoning and the nursing process to solve patient problems and plan holistic care.",
+        "Use evidence and integrated concept maps in nursing care planning.",
+        "Plan care for hematological, immunological, fluid-electrolyte, acid-base, gastrointestinal, genitourinary and oncological disorders.",
+        "Demonstrate legal, ethical, culturally sensitive and collaborative nursing practice.",
+        "Formulate nursing care plans and provide safe client and family education."
+      ]
+    },
+    {
+      "id": "s3-health-assessment-1",
+      "title": "Health Assessment I",
+      "category": "Major",
+      "credits": 2,
+      "theory": 1,
+      "clinical": 0,
+      "lab": 1,
+      "outcomes": [
+        "Obtain a complete health history using appropriate interviewing and therapeutic communication skills.",
+        "Use appropriate assessment and physical-examination techniques for specified body regions.",
+        "Differentiate normal from abnormal health findings.",
+        "Document patient findings appropriately.",
+        "Integrate growth and development, anatomy, physiology and psychosocial knowledge when analysing assessment data."
+      ]
+    },
+    {
+      "id": "s3-pathophysiology-1",
+      "title": "Pathophysiology I",
+      "category": "Major",
+      "credits": 3,
+      "theory": 2,
+      "clinical": 0,
+      "lab": 1,
+      "outcomes": [
+        "Explain homeostasis, cellular change, inflammation, infection, healing and abnormal immune responses.",
+        "Relate anatomy and physiology to disruptions in homeostasis and disease processes.",
+        "Differentiate disease processes associated with homeostatic and hematological disorders.",
+        "Interpret fluid, electrolyte and acid-base values and their role in disease.",
+        "Apply pathophysiology principles when caring for patients in hospital and community settings.",
+        "Explain common genitourinary and gastrointestinal disease mechanisms and clinical manifestations.",
+        "Explain environmental contributions to altered physiological processes."
+      ]
+    }
+  ],
+  "inventory": [
+    {"courseId": "s3-professional-communication-skills", "lessons": 12, "mcqs": 150, "flashcards": 45, "written": 30, "course_tests": 2},
+    {"courseId": "s3-clinical-pharmacology-drug-administration-1", "lessons": 8, "mcqs": 100, "flashcards": 30, "written": 20, "course_tests": 2},
+    {"courseId": "s3-medical-surgical-nursing-1", "lessons": 12, "mcqs": 150, "flashcards": 45, "written": 30, "course_tests": 2},
+    {"courseId": "s3-health-assessment-1", "lessons": 8, "mcqs": 100, "flashcards": 30, "written": 20, "course_tests": 2},
+    {"courseId": "s3-pathophysiology-1", "lessons": 12, "mcqs": 150, "flashcards": 45, "written": 30, "course_tests": 2}
+  ]
+}

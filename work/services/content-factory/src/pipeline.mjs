@@ -38,15 +38,15 @@ export function batchCount(cursor, courses) {
 }
 
 export function riskFor(courseId, contentType) {
-  if (courseId === 's1-fundamentals-1') return 'patient_safety';
-  if (['s1-microbiology', 's1-biochemistry', 's1-anatomy-physiology-1'].includes(courseId)) return 'clinical_foundation';
+  if (['s1-fundamentals-1', 's2-fundamentals-2', 's2-applied-nutrition', 's3-clinical-pharmacology-drug-administration-1', 's3-medical-surgical-nursing-1', 's3-health-assessment-1'].includes(courseId)) return 'patient_safety';
+  if (['s1-microbiology', 's1-biochemistry', 's1-anatomy-physiology-1', 's2-anatomy-physiology-2', 's3-pathophysiology-1'].includes(courseId)) return 'clinical_foundation';
   if (contentType === 'semester_mock') return 'mixed';
   return 'academic';
 }
 
-export function contentId({ stage, courseId, index }) {
+export function contentId({ semester = 1, stage, courseId, index }) {
   const singular = { outlines: 'outline', lessons: 'lesson', mcqs: 'mcq', flashcards: 'flashcard', written: 'written', course_tests: 'test', semester_mocks: 'mock' }[stage];
-  return `semester-1-${courseId ?? 'all'}-${singular}-${String(index + 1).padStart(3, '0')}`;
+  return `semester-${semester}-${courseId ?? 'all'}-${singular}-${String(index + 1).padStart(3, '0')}`;
 }
 
 export function fingerprint(value) {

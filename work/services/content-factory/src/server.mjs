@@ -12,10 +12,13 @@ const port = Number(process.env.PORT ?? 8080);
 const projectId = process.env.GOOGLE_CLOUD_PROJECT ?? process.env.GCLOUD_PROJECT;
 const model = process.env.VERTEX_MODEL ?? 'gemini-2.5-flash';
 const reviewModel = process.env.VERTEX_REVIEW_MODEL ?? model;
-const semesterOne = JSON.parse(await readFile(new URL('../data/semester-1.json', import.meta.url), 'utf8'));
-const sourceLibrary = JSON.parse(await readFile(new URL('../data/semester-1-sources.json', import.meta.url), 'utf8'));
-const jobId = 'semester-1-outline-hec-2024';
-const semesterCapUsd = Number(process.env.SEMESTER_CAP_USD ?? 110);
+const activeSemester = Number(process.env.ACTIVE_SEMESTER ?? 3);
+if (activeSemester !== 3) throw new Error('This revision is safety-locked to Semester 3.');
+const semesterData = JSON.parse(await readFile(new URL(`../data/semester-${activeSemester}.json`, import.meta.url), 'utf8'));
+const sourceLibrary = JSON.parse(await readFile(new URL(`../data/semester-${activeSemester}-sources.json`, import.meta.url), 'utf8'));
+const jobId = `semester-${activeSemester}-hec-2024`;
+const semesterCapUsd = Number(process.env.SEMESTER_CAP_USD ?? 103.50);
+const maxBatchUsd = Number(process.env.MAX_BATCH_USD ?? 1.50);
 
 const objectArraySchema = properties => ({
   type: 'OBJECT',
@@ -37,6 +40,12 @@ const schemas = {
     sections: { type: 'ARRAY', items: { type: 'OBJECT', properties: { heading: { type: 'STRING' }, text: { type: 'STRING' } }, required: ['heading', 'text'] } },
     keyTerms: { type: 'ARRAY', items: { type: 'OBJECT', properties: { term: { type: 'STRING' }, definition: { type: 'STRING' } }, required: ['term', 'definition'] } },
     summaryPoints: { type: 'ARRAY', items: { type: 'STRING' } }, cautions: { type: 'ARRAY', items: { type: 'STRING' } }, sourceIds: { type: 'ARRAY', items: { type: 'STRING' } },
+    visuals: { type: 'ARRAY', items: { type: 'OBJECT', properties: {
+      type: { type: 'STRING' }, title: { type: 'STRING' }, purpose: { type: 'STRING' },
+      content: { type: 'ARRAY', items: { type: 'STRING' } }, caption: { type: 'STRING' },
+      altText: { type: 'STRING' }, sourceIds: { type: 'ARRAY', items: { type: 'STRING' } },
+      clinicalReviewRequired: { type: 'BOOLEAN' }
+    }, required: ['type', 'title', 'purpose', 'content', 'caption', 'altText', 'sourceIds', 'clinicalReviewRequired'] } },
   }),
   mcqs: objectArraySchema({
     stem: { type: 'STRING' }, options: { type: 'ARRAY', items: { type: 'STRING' } }, correctIndex: { type: 'INTEGER' }, rationale: { type: 'STRING' },
@@ -71,7 +80,7 @@ function reply(res, status, body) {
 }
 
 function sourcesFor(courseId) {
-  const ids = sourceLibrary.courseSources[courseId] ?? [semesterOne.source.id];
+  const ids = sourceLibrary.courseSources[courseId] ?? [semesterData.source.id];
   return ids.map(id => sourceLibrary.sources.find(source => source.id === id)).filter(Boolean);
 }
 
@@ -90,13 +99,13 @@ function sourceContext(courseId) {
 
 function generationPrompt(cursor, course, count, outline) {
   const start = cursor.offset + 1;
-  const common = `Create INTERNAL DRAFT study content for Pakistani Generic BSN Semester 1 students.\n${courseContext(course)}\n` +
+  const common = `Create INTERNAL DRAFT study content for Pakistani Generic BSN Semester ${activeSemester} students.\n${courseContext(course)}\n` +
     `Approved source register:\n${sourceContext(course.id)}\n` +
     `Use only concepts inside the stated source scopes. Paraphrase; do not reproduce textbook passages or existing questions. Record only source IDs from this register. ` +
     `Never fabricate citations, laws, statistics, doses, reference ranges, diagnostic thresholds or clinical recommendations. ` +
     `Patient-safety and Pakistan-specific scope claims must be explicitly cautious and will receive owner review. Return exactly ${count} item(s) in JSON.`;
   if (cursor.stage === 'outlines') return `${common}\nCreate one coherent unit map aligned to the supplied HEC outcomes. Unit scope statements only. Mark institutional syllabus review true when HEC outcomes are absent.`;
-  if (cursor.stage === 'lessons') return `${common}\nCourse outline: ${JSON.stringify(outline?.units ?? [])}\nCreate lessons ${start}-${start + count - 1} of ${targetsForCourse(course).lessons}. Each lesson must be self-contained, concise but substantive, with 3-6 sections, objectives, key terms, summary points and safety cautions where relevant. Distribute lessons across the outline without repeating earlier sequence positions.`;
+  if (cursor.stage === 'lessons') return `${common}\nCourse outline: ${JSON.stringify(outline?.units ?? [])}\nCreate lessons ${start}-${start + count - 1} of ${targetsForCourse(course).lessons}. Each lesson must be self-contained and substantive, with 3-6 sections, objectives, key terms, summary points and safety cautions where relevant. Every lesson MUST include 2-4 useful visuals chosen from diagram, flowchart, comparison_table, timeline, concept_map or data_chart. Visual content must be structured as short labels/steps/data that the app can render; include an accurate caption and descriptive alt text. Never request a decorative stock image or fabricate patient imagery, anatomy, clinical values or statistics. Set clinicalReviewRequired=true for any clinical process, anatomy, nutrition or patient-safety visual. Distribute lessons across the outline without repetition.`;
   if (cursor.stage === 'mcqs') return `${common}\nCourse outline: ${JSON.stringify(outline?.units ?? [])}\nCreate MCQs ${start}-${start + count - 1} of ${targetsForCourse(course).mcqs}. Every item must have exactly four plausible options, correctIndex 0-3, a positive rationale, and exactly four option-specific rationales. Avoid trick wording, negatives and duplicates. Mix recall, understanding and application.`;
   if (cursor.stage === 'flashcards') return `${common}\nCourse outline: ${JSON.stringify(outline?.units ?? [])}\nCreate flashcards ${start}-${start + count - 1} of ${targetsForCourse(course).flashcards}. One testable fact per card; concise front and unambiguous back; no duplicate concepts.`;
   if (cursor.stage === 'written') return `${common}\nCourse outline: ${JSON.stringify(outline?.units ?? [])}\nCreate written questions ${start}-${start + count - 1} of ${targetsForCourse(course).written}. Include an objective answer-point rubric and realistic marks. Mix short and structured questions.`;
@@ -105,8 +114,8 @@ function generationPrompt(cursor, course, count, outline) {
 }
 
 function mockPrompt(count) {
-  const courses = semesterOne.courses.map(course => `${course.id}: ${course.title}, ${course.credits} credits`).join('\n');
-  return `Create exactly ${count} INTERNAL DRAFT Semester 1 mock-examination blueprints for NursePath Pakistan.\nCourses:\n${courses}\n` +
+  const courses = semesterData.courses.map(course => `${course.id}: ${course.title}, ${course.credits} credits`).join('\n');
+  return `Create exactly ${count} INTERNAL DRAFT Semester ${activeSemester} mock-examination blueprints for NursePath Pakistan.\nCourses:\n${courses}\n` +
     `Each mock selects from the already generated MCQ banks, contains 100 questions, allocates questions broadly by credits, covers every course, and has a 120-minute duration. ` +
     `courseId values must exactly match the list. The courseBlueprint question counts must total 100. Return JSON only.`;
 }
@@ -114,7 +123,7 @@ function mockPrompt(count) {
 function verificationPrompt(cursor, course, items) {
   return `Act as an independent academic verifier. Check every generated ${cursor.stage} item for factual support within the registered source scopes, internal consistency, answer correctness, ambiguity, duplicated options, unsafe clinical advice, and invented Pakistan-specific claims. ` +
     `Do not rewrite items. Return one result for every zero-based index. For blueprints, answerCorrect means internal totals and constraints are correct. ` +
-    `Set pass=false for any unsupported or doubtful claim.\nCourse:\n${course ? courseContext(course) : 'All Semester 1 courses'}\n` +
+    `For lessons, also reject missing, decorative, inaccessible, misleading or clinically unsafe visual specifications. Set pass=false for any unsupported or doubtful claim.\nCourse:\n${course ? courseContext(course) : `All Semester ${activeSemester} courses`}\n` +
     `Sources:\n${course ? sourceContext(course.id) : sourceLibrary.sources.map(s => `[${s.id}] ${s.scope}`).join('\n')}\nCandidates:\n${JSON.stringify(items)}`;
 }
 
@@ -124,45 +133,26 @@ function estimateUsd(usage = {}) {
   return Number(((input * 0.30 + output * 2.50) / 1_000_000).toFixed(6));
 }
 
-async function seedSemesterOne() {
+async function seedSemester() {
   const ref = db.collection('contentJobs').doc(jobId);
   const existing = await ref.get();
   if (existing.exists) return { jobId, status: existing.data().status, existing: true };
   await ref.set({
-    id: jobId, type: 'semester_full_draft_generation', pipelineVersion: 2, semester: 1,
-    curriculumVersion: semesterOne.curriculumVersion, sourceLibraryVersion: sourceLibrary.version,
-    courses: semesterOne.courses, cursor: initialCursor(), status: 'queued', publicationEnabled: false,
-    ownerReviewGate: 'semester_complete', inventory: semesterOne.courses.map(course => ({ courseId: course.id, ...targetsForCourse(course) })),
-    creditGuard: { semesterCapUsd, stopAtGlobalPercent: 90, consumedUsd: 0 },
+    id: jobId, type: 'semester_full_draft_generation', pipelineVersion: 3, semester: activeSemester,
+    curriculumVersion: semesterData.curriculumVersion, sourceLibraryVersion: sourceLibrary.version,
+    courses: semesterData.courses, cursor: initialCursor(), status: 'queued', publicationEnabled: false,
+    ownerReviewGate: 'semester_complete', inventory: semesterData.courses.map(course => ({ courseId: course.id, ...targetsForCourse(course) })),
+    richMediaPolicy: { requiredPerLesson: { min: 2, max: 4 }, allowed: ['diagram','flowchart','comparison_table','timeline','concept_map','data_chart'], altTextRequired: true, clinicalReviewRequired: true },
+    creditGuard: { semesterCapUsd, maxBatchUsd, stopAtGlobalPercent: 90, consumedUsd: 0 },
     createdAt: FieldValue.serverTimestamp(), updatedAt: FieldValue.serverTimestamp(),
   });
   return { jobId, status: 'queued', existing: false };
 }
 
-async function migrateSemesterOne() {
-  const ref = db.collection('contentJobs').doc(jobId);
-  const snapshot = await ref.get();
-  const old = snapshot.exists ? snapshot.data() : {};
-  const completedOutlines = Math.min(old.nextCourseIndex ?? 0, semesterOne.courses.length);
-  const cursor = completedOutlines >= semesterOne.courses.length
-    ? { stage: 'lessons', courseIndex: 0, offset: 0 }
-    : initialCursor(completedOutlines);
-  await ref.set({
-    id: jobId, type: 'semester_full_draft_generation', pipelineVersion: 2, semester: 1,
-    curriculumVersion: semesterOne.curriculumVersion, sourceLibraryVersion: sourceLibrary.version,
-    courses: semesterOne.courses, cursor, status: 'queued', publicationEnabled: false,
-    ownerReviewGate: 'semester_complete', inventory: semesterOne.courses.map(course => ({ courseId: course.id, ...targetsForCourse(course) })),
-    creditGuard: { semesterCapUsd, stopAtGlobalPercent: 90, consumedUsd: old.creditGuard?.consumedUsd ?? 0 },
-    leaseExpiresAt: null, migratedAt: FieldValue.serverTimestamp(), updatedAt: FieldValue.serverTimestamp(),
-  }, { merge: true });
-  return { jobId, status: 'queued', cursor, migrated: true };
-}
-
 async function loadOutline(courseId) {
-  const newDoc = await db.collection('contentDrafts').doc(contentId({ stage: 'outlines', courseId, index: 0 })).get();
+  const newDoc = await db.collection('contentDrafts').doc(contentId({ semester: activeSemester, stage: 'outlines', courseId, index: 0 })).get();
   if (newDoc.exists) return newDoc.data().body;
-  const oldDoc = await db.collection('contentDrafts').doc(`semester-1-outline-${courseId}`).get();
-  return oldDoc.exists ? oldDoc.data().originalGeneratedText : null;
+  return newDoc.exists ? newDoc.data().body : null;
 }
 
 async function saveItems({ cursor, course, items, verification, generationUsage, reviewUsage }) {
@@ -170,12 +160,12 @@ async function saveItems({ cursor, course, items, verification, generationUsage,
   const sourceIds = course ? sourcesFor(course.id).map(source => source.id) : sourceLibrary.sources.map(source => source.id);
   for (let index = 0; index < items.length; index += 1) {
     const absoluteIndex = cursor.offset + index;
-    const id = contentId({ stage: cursor.stage, courseId: course?.id, index: absoluteIndex });
+    const id = contentId({ semester: activeSemester, stage: cursor.stage, courseId: course?.id, index: absoluteIndex });
     const check = verification[index] ?? { index, pass: false, answerCorrect: false, issues: ['Verifier did not return a result.'], unsupportedClaims: [] };
     const item = items[index];
     const duplicateSeed = item.stem ?? item.front ?? item.question ?? item.title ?? JSON.stringify(item);
     writer.set(db.collection('contentDrafts').doc(id), {
-      id, semester: 1, courseId: course?.id ?? null, curriculumVersion: semesterOne.curriculumVersion,
+      id, semester: activeSemester, courseId: course?.id ?? null, curriculumVersion: semesterData.curriculumVersion,
       contentType: { outlines: 'course_outline', lessons: 'lesson', mcqs: 'mcq', flashcards: 'flashcard', written: 'written_question', course_tests: 'course_test', semester_mocks: 'semester_mock' }[cursor.stage],
       body: item, originalGeneratedText: item, sourceIds, sourceLibraryVersion: sourceLibrary.version,
       model, reviewModel, promptVersion: 'semester-full-draft-v2', difficulty: item.difficulty ?? 'mixed',
@@ -191,12 +181,17 @@ async function saveItems({ cursor, course, items, verification, generationUsage,
 
 async function processBatch() {
   const ref = db.collection('contentJobs').doc(jobId);
+  const current = await ref.get();
+  if (!current.exists) {
+    await seedSemester();
+    return { jobId, status: 'seeded', nextAction: 'next_scheduler_call_starts_generation' };
+  }
   const claimed = await db.runTransaction(async transaction => {
     const snapshot = await transaction.get(ref);
     if (!snapshot.exists) return null;
     const job = snapshot.data();
-    if (job.pipelineVersion !== 2 || !['queued', 'running'].includes(job.status)) return null;
-    if ((job.creditGuard?.consumedUsd ?? 0) >= semesterCapUsd) {
+    if (job.pipelineVersion !== 3 || !['queued', 'running'].includes(job.status)) return null;
+    if ((job.creditGuard?.consumedUsd ?? 0) + maxBatchUsd > semesterCapUsd) {
       transaction.set(ref, { status: 'stopped', stoppedReason: 'semester_budget_cap', updatedAt: FieldValue.serverTimestamp() }, { merge: true });
       return null;
     }
@@ -211,18 +206,22 @@ async function processBatch() {
     await ref.set({ status: 'semester_review', leaseExpiresAt: null, completedAt: FieldValue.serverTimestamp(), updatedAt: FieldValue.serverTimestamp() }, { merge: true });
     return { jobId, status: 'semester_review' };
   }
-  const course = cursor.stage === 'semester_mocks' ? null : semesterOne.courses[cursor.courseIndex];
-  const count = batchCount(cursor, semesterOne.courses);
+  const course = cursor.stage === 'semester_mocks' ? null : semesterData.courses[cursor.courseIndex];
+  const count = batchCount(cursor, semesterData.courses);
   const outline = course && cursor.stage !== 'outlines' ? await loadOutline(course.id) : null;
   const token = await credential.getAccessToken();
   const prompt = cursor.stage === 'semester_mocks' ? mockPrompt(count) : generationPrompt(cursor, course, count, outline);
   const generated = await generateWithVertex({ projectId, accessToken: token.access_token, model, prompt, responseSchema: schemas[cursor.stage] });
-  if (generated.item.items.length !== count) throw new Error(`Vertex returned ${generated.item.items.length} items; expected ${count}`);
-  const review = await generateWithVertex({ projectId, accessToken: token.access_token, model: reviewModel, prompt: verificationPrompt(cursor, course, generated.item.items), responseSchema: verificationSchema });
-  await saveItems({ cursor, course, items: generated.item.items, verification: review.item.items, generationUsage: generated.usage, reviewUsage: review.usage });
+  const returnedItems = Array.isArray(generated.item?.items) ? generated.item.items : [];
+  if (returnedItems.length < count) throw new Error(`Vertex returned ${returnedItems.length} items; expected at least ${count}`);
+  const generatedItems = returnedItems.slice(0, count);
+  if (returnedItems.length > count) console.warn(`Vertex returned ${returnedItems.length} items; safely trimming to ${count}`);
+  const review = await generateWithVertex({ projectId, accessToken: token.access_token, model: reviewModel, prompt: verificationPrompt(cursor, course, generatedItems), responseSchema: verificationSchema });
+  const verificationItems = Array.isArray(review.item?.items) ? review.item.items.slice(0, count) : [];
+  await saveItems({ cursor, course, items: generatedItems, verification: verificationItems, generationUsage: generated.usage, reviewUsage: review.usage });
   const cost = estimateUsd(generated.usage) + estimateUsd(review.usage);
   const consumedUsd = Number(((claimed.creditGuard?.consumedUsd ?? 0) + cost).toFixed(6));
-  const nextCursor = advanceCursor(cursor, count, semesterOne.courses);
+  const nextCursor = advanceCursor(cursor, count, semesterData.courses);
   const status = nextCursor ? (consumedUsd >= semesterCapUsd ? 'stopped' : 'queued') : 'semester_review';
   await ref.set({
     cursor: nextCursor, status, leaseExpiresAt: null,
@@ -237,9 +236,8 @@ async function processBatch() {
 
 http.createServer(async (req, res) => {
   try {
-    if (req.method === 'GET' && req.url === '/healthz') return reply(res, 200, { service: 'nursepath-content-worker', status: 'healthy', pipelineVersion: 2, model, reviewModel });
-    if (req.method === 'POST' && req.url === '/seed/semester-1') return reply(res, 200, await seedSemesterOne());
-    if (req.method === 'POST' && req.url === '/migrate/semester-1') return reply(res, 200, await migrateSemesterOne());
+    if (req.method === 'GET' && req.url === '/healthz') return reply(res, 200, { service: 'nursepath-content-worker', status: 'healthy', pipelineVersion: 3, activeSemester, model, reviewModel, semesterCapUsd, maxBatchUsd });
+    if (req.method === 'POST' && req.url === '/seed/semester-3') return reply(res, 200, await seedSemester());
     if (req.method === 'POST' && req.url === '/run') return reply(res, 200, await processBatch());
     return reply(res, 404, { error: 'not_found' });
   } catch (error) {
