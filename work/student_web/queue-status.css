@@ -1,0 +1,4 @@
+.status-chip.queued{background:#fff3df;color:#9b6115}
+.status-dot.queued{background:var(--amber)}
+.semester-admin-list article:has(.status-chip.queued) small{font-size:0}
+.semester-admin-list article:has(.status-chip.queued) small::after{content:"Waiting safely behind the active semester";font-size:13px}

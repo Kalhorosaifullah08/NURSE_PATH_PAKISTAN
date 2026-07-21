@@ -1,0 +1,70 @@
+{
+  "id": "semester-7-hec-2024",
+  "semester": 7,
+  "curriculumVersion": "hec-bsn-2024",
+  "sourceLibraryVersion": "2026-07-21-s7",
+  "courses": [
+    {
+      "id": "s7-obstetrics-gynecological-nursing",
+      "title": "Obstetrics & Gynecological Nursing",
+      "category": "Major",
+      "credits": 6,
+      "theory": 3,
+      "clinical": 3,
+      "lab": 0,
+      "outcomes": [
+        "Explain physiological and psychological changes during pregnancy, labor, postpartum, and neonatal stages.",
+        "Demonstrate antenatal assessment, intrapartum monitoring, and essential newborn care (ENC).",
+        "Formulate care plans for high-risk pregnancies, preeclampsia, postpartum hemorrhage (PPH), and maternal complications.",
+        "Apply family planning counseling, reproductive health education, and gynecological disorder management."
+      ]
+    },
+    {
+      "id": "s7-advanced-clinical-practicum-1",
+      "title": "Advanced Clinical Practicum I",
+      "category": "Major",
+      "credits": 6,
+      "theory": 0,
+      "clinical": 6,
+      "lab": 0,
+      "outcomes": [
+        "Synthesize comprehensive medical-surgical, emergency, and obstetric clinical skills in high-volume hospital units.",
+        "Demonstrate independent nursing decision-making, patient prioritization, and multidisciplinary care coordination.",
+        "Apply infection control, patient safety protocols, and therapeutic communication under clinical preceptorship."
+      ]
+    },
+    {
+      "id": "s7-senior-seminar-nursing",
+      "title": "Senior Seminar & Professional Nursing Issues",
+      "category": "Major",
+      "credits": 2,
+      "theory": 2,
+      "clinical": 0,
+      "lab": 0,
+      "outcomes": [
+        "Analyze nursing legislation, Pakistan Nursing Council (PNC) regulations, and ethical practice standards.",
+        "Evaluate contemporary issues in healthcare policy, nursing autonomy, advocacy, and workforce development in Pakistan.",
+        "Formulate professional career development plans and continuing nursing education (CNE) pathways."
+      ]
+    },
+    {
+      "id": "s7-nursing-research-project-1",
+      "title": "Nursing Research Project I",
+      "category": "Major",
+      "credits": 2,
+      "theory": 0,
+      "clinical": 0,
+      "lab": 2,
+      "outcomes": [
+        "Execute approved research methodology, data collection, and statistical analysis for an undergraduate thesis.",
+        "Synthesize findings, draw clinical conclusions, and write a formal academic research report."
+      ]
+    }
+  ],
+  "inventory": [
+    {"courseId": "s7-obstetrics-gynecological-nursing", "lessons": 12, "mcqs": 150, "flashcards": 45, "written": 30, "course_tests": 2},
+    {"courseId": "s7-advanced-clinical-practicum-1", "lessons": 8, "mcqs": 100, "flashcards": 30, "written": 20, "course_tests": 2},
+    {"courseId": "s7-senior-seminar-nursing", "lessons": 8, "mcqs": 100, "flashcards": 30, "written": 20, "course_tests": 2},
+    {"courseId": "s7-nursing-research-project-1", "lessons": 6, "mcqs": 50, "flashcards": 20, "written": 15, "course_tests": 1}
+  ]
+}

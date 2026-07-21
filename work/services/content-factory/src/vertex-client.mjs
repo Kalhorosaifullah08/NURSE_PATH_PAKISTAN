@@ -8,7 +8,17 @@ export function generationPrompt({ course, outcome, sources, contentType }) {
     `Sources:\n${sources.map((source) => `[${source.id}] ${source.excerpt}`).join('\n')}`;
 }
 
-export async function generateWithVertex({ projectId, accessToken, model, prompt, responseSchema, location = defaultLocation }) {
+export class VertexStructuredOutputError extends Error {
+  constructor({ finishReason, responseChars, cause }) {
+    super(`Vertex returned invalid structured JSON (finishReason=${finishReason ?? 'unknown'}, responseChars=${responseChars})`, { cause });
+    this.name = 'VertexStructuredOutputError';
+    this.code = 'VERTEX_INVALID_STRUCTURED_JSON';
+    this.finishReason = finishReason ?? null;
+    this.responseChars = responseChars;
+  }
+}
+
+export async function generateWithVertex({ projectId, accessToken, model, prompt, responseSchema, location = defaultLocation, maxOutputTokens = 8192 }) {
   if (!projectId || !accessToken || !model) throw new Error('Vertex configuration is incomplete');
   const endpoint = `https://${location === 'global' ? 'aiplatform.googleapis.com' : `${location}-aiplatform.googleapis.com`}/v1/projects/${projectId}/locations/${location}/publishers/google/models/${model}:generateContent`;
   const response = await fetch(endpoint, {
@@ -16,12 +26,17 @@ export async function generateWithVertex({ projectId, accessToken, model, prompt
     headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({
       contents: [{ role: 'user', parts: [{ text: prompt }] }],
-      generationConfig: { temperature: 0, responseMimeType: 'application/json', responseSchema },
+      generationConfig: { temperature: 0, maxOutputTokens, responseMimeType: 'application/json', responseSchema },
     }),
   });
   if (!response.ok) throw new Error(`Vertex request failed with ${response.status}`);
   const result = await response.json();
-  const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
+  const candidate = result.candidates?.[0];
+  const text = candidate?.content?.parts?.[0]?.text;
   if (!text) throw new Error('Vertex returned no structured content');
-  return { item: JSON.parse(text), usage: result.usageMetadata ?? {} };
+  try {
+    return { item: JSON.parse(text), usage: result.usageMetadata ?? {}, finishReason: candidate?.finishReason ?? null };
+  } catch (cause) {
+    throw new VertexStructuredOutputError({ finishReason: candidate?.finishReason, responseChars: text.length, cause });
+  }
 }

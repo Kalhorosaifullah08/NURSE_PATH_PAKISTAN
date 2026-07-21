@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'data/sample_repository.dart';
 import 'data/content_repository.dart';
 import 'domain/models.dart';
 import 'state/app_state.dart';
 
-const navy = Color(0xff0C3044);
-const navy2 = Color(0xff164A5F);
-const teal = Color(0xff159A83);
-const mint = Color(0xff62DCC1);
-const canvas = Color(0xffF4F8F7);
-const ink = Color(0xff122B3A);
-const muted = Color(0xff637985);
-const line = Color(0xffDCE8E5);
-const warm = Color(0xffFFF3DC);
+// Premium Medical Emerald & Deep Navy Palette
+const navy = Color(0xff1E293B); // Deep Navy
+const navy2 = Color(0xff334155); 
+const teal = Color(0xff10B981); // Medical Emerald
+const mint = Color(0xff34D399); 
+const canvas = Color(0xffF8FAFC);
+const ink = Color(0xff0F172A);
+const muted = Color(0xff64748B);
+const line = Color(0xffE2E8F0);
+const warm = Color(0xffFFFBEB);
 
 void main() => runApp(const NursePathApp());
 
@@ -26,69 +28,71 @@ class NursePathApp extends StatefulWidget {
 class _NursePathAppState extends State<NursePathApp> {
   final state = AppState();
   @override
-  Widget build(BuildContext context) => MaterialApp(
-    debugShowCheckedModeBanner: false,
-    title: 'NursePath Pakistan',
-    theme: ThemeData(
-      useMaterial3: true,
-      scaffoldBackgroundColor: canvas,
-      colorScheme: const ColorScheme.light(
-        primary: teal,
-        secondary: mint,
-        surface: Colors.white,
-        onSurface: ink,
-      ),
-      fontFamily: 'Arial',
-      textTheme: const TextTheme(
-        displaySmall: TextStyle(
-          fontSize: 36,
-          height: 1.05,
-          fontWeight: FontWeight.w900,
-          color: ink,
-          letterSpacing: -1.2,
+  Widget build(BuildContext context) {
+    final baseTextTheme = GoogleFonts.interTextTheme(Theme.of(context).textTheme);
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'NursePath Pakistan',
+      theme: ThemeData(
+        useMaterial3: true,
+        scaffoldBackgroundColor: canvas,
+        colorScheme: const ColorScheme.light(
+          primary: teal,
+          secondary: mint,
+          surface: Colors.white,
+          onSurface: ink,
         ),
-        headlineMedium: TextStyle(
-          fontSize: 26,
-          height: 1.12,
-          fontWeight: FontWeight.w900,
-          color: ink,
-          letterSpacing: -.6,
+        textTheme: baseTextTheme.copyWith(
+          displaySmall: baseTextTheme.displaySmall?.copyWith(
+            fontSize: 36,
+            height: 1.05,
+            fontWeight: FontWeight.w900,
+            color: ink,
+            letterSpacing: -1.2,
+          ),
+          headlineMedium: baseTextTheme.headlineMedium?.copyWith(
+            fontSize: 26,
+            height: 1.12,
+            fontWeight: FontWeight.w900,
+            color: ink,
+            letterSpacing: -.6,
+          ),
+          titleLarge: baseTextTheme.titleLarge?.copyWith(
+            fontSize: 20,
+            fontWeight: FontWeight.w800,
+            color: ink,
+          ),
+          titleMedium: baseTextTheme.titleMedium?.copyWith(
+            fontSize: 16,
+            fontWeight: FontWeight.w800,
+            color: ink,
+          ),
+          bodyLarge: baseTextTheme.bodyLarge?.copyWith(fontSize: 16, height: 1.6, color: ink),
+          bodyMedium: baseTextTheme.bodyMedium?.copyWith(fontSize: 14, height: 1.45, color: muted),
+          labelLarge: baseTextTheme.labelLarge?.copyWith(fontSize: 13, fontWeight: FontWeight.w800),
         ),
-        titleLarge: TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.w800,
-          color: ink,
-        ),
-        titleMedium: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.w800,
-          color: ink,
-        ),
-        bodyLarge: TextStyle(fontSize: 16, height: 1.6, color: ink),
-        bodyMedium: TextStyle(fontSize: 14, height: 1.45, color: muted),
-        labelLarge: TextStyle(fontSize: 13, fontWeight: FontWeight.w800),
-      ),
-      cardTheme: CardThemeData(
-        color: Colors.white,
-        elevation: 0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(24),
-          side: const BorderSide(color: line),
-        ),
-      ),
-      filledButtonTheme: FilledButtonThemeData(
-        style: FilledButton.styleFrom(
-          backgroundColor: teal,
-          foregroundColor: Colors.white,
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        cardTheme: CardThemeData(
+          color: Colors.white,
+          elevation: 0,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(24),
+            side: const BorderSide(color: line),
+          ),
+        ),
+        filledButtonTheme: FilledButtonThemeData(
+          style: FilledButton.styleFrom(
+            backgroundColor: teal,
+            foregroundColor: Colors.white,
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
           ),
         ),
       ),
-    ),
-    home: AppShell(state: state),
-  );
+      home: AppShell(state: state),
+    );
+  }
 }
 
 class AppShell extends StatefulWidget {

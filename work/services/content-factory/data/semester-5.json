@@ -1,0 +1,77 @@
+{
+  "id": "semester-5-hec-2024",
+  "semester": 5,
+  "curriculumVersion": "hec-bsn-2024",
+  "sourceLibraryVersion": "2026-07-21-s5",
+  "courses": [
+    {
+      "id": "s5-pediatric-nursing",
+      "title": "Pediatric & Child Health Nursing",
+      "category": "Major",
+      "credits": 5,
+      "theory": 3,
+      "clinical": 2,
+      "lab": 0,
+      "outcomes": [
+        "Apply growth and development theories to pediatric nursing care across age groups.",
+        "Demonstrate assessment skills specific to infants, toddlers, children, and adolescents.",
+        "Formulate nursing care plans for pediatric infectious, respiratory, cardiovascular, and gastrointestinal conditions.",
+        "Apply safety, dosage calculation, and family-centered care principles in pediatric drug administration.",
+        "Identify signs of pediatric emergencies, dehydration, and acute distress for immediate escalation."
+      ]
+    },
+    {
+      "id": "s5-community-health-nursing-2",
+      "title": "Community Health Nursing II",
+      "category": "Major",
+      "credits": 6,
+      "theory": 3,
+      "clinical": 3,
+      "lab": 0,
+      "outcomes": [
+        "Assess community health needs using epidemiological and demographic data.",
+        "Design and implement community-based health promotion and disease prevention programs.",
+        "Evaluate environmental health hazards, sanitation, and vector control in community settings in Pakistan.",
+        "Demonstrate home visit protocols, family assessment, and primary health care delivery.",
+        "Collaborate with local public health agencies, immunization programs (EPI), and maternal-child health clinics."
+      ]
+    },
+    {
+      "id": "s5-nursing-research-1",
+      "title": "Nursing Research I",
+      "category": "Major",
+      "credits": 3,
+      "theory": 3,
+      "clinical": 0,
+      "lab": 0,
+      "outcomes": [
+        "Explain the importance of evidence-based practice and research in professional nursing.",
+        "Formulate clinical research questions using the PICO framework.",
+        "Critique quantitative and qualitative nursing research literature.",
+        "Explain research design, sampling methods, data collection tools, and ethical considerations.",
+        "Develop a formal nursing research proposal."
+      ]
+    },
+    {
+      "id": "s5-nursing-leadership-management",
+      "title": "Nursing Leadership and Management",
+      "category": "Major",
+      "credits": 3,
+      "theory": 2,
+      "clinical": 1,
+      "lab": 0,
+      "outcomes": [
+        "Apply leadership theories, management principles, and decision-making models in clinical environments.",
+        "Demonstrate effective delegation, conflict resolution, time management, and team communication.",
+        "Explain healthcare quality improvement, patient safety protocols, and risk management.",
+        "Differentiate organizational structures, resource allocation, and staffing models in hospital units."
+      ]
+    }
+  ],
+  "inventory": [
+    {"courseId": "s5-pediatric-nursing", "lessons": 12, "mcqs": 150, "flashcards": 45, "written": 30, "course_tests": 2},
+    {"courseId": "s5-community-health-nursing-2", "lessons": 12, "mcqs": 150, "flashcards": 45, "written": 30, "course_tests": 2},
+    {"courseId": "s5-nursing-research-1", "lessons": 8, "mcqs": 100, "flashcards": 30, "written": 20, "course_tests": 2},
+    {"courseId": "s5-nursing-leadership-management", "lessons": 8, "mcqs": 100, "flashcards": 30, "written": 20, "course_tests": 2}
+  ]
+}

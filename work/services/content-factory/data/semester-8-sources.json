@@ -1,0 +1,26 @@
+{
+  "version": "2026-07-21-s8",
+  "sources": [
+    {
+      "id": "hec-bsn-msn-2024",
+      "title": "HEC Curriculum of Nursing Education - BSN and MSN 2024",
+      "publisher": "Higher Education Commission Pakistan",
+      "license": "Official National Curriculum",
+      "url": "https://www.hec.gov.pk/english/services/universities/RevisedCurricula/Documents/2023-2024/HEC%20Curriculum%20BSN-MSN%202024.pdf",
+      "scope": "Generic BSN Semester 8 course outlines, outcomes, and competencies."
+    },
+    {
+      "id": "saunder-nclex-review",
+      "title": "Saunders Comprehensive Review for the NCLEX-RN Examination",
+      "publisher": "Elsevier",
+      "license": "Academic Reference Standard",
+      "url": "https://elsevier.com/saunders-nclex",
+      "scope": "Comprehensive nursing review, clinical judgment model, delegation, prioritization, and licensing review."
+    }
+  ],
+  "courseSources": {
+    "s8-comprehensive-nursing-review": ["hec-bsn-msn-2024", "saunder-nclex-review"],
+    "s8-clinical-internship-practicum": ["hec-bsn-msn-2024"],
+    "s8-leadership-capstone": ["hec-bsn-msn-2024"]
+  }
+}

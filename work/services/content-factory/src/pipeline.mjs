@@ -1,6 +1,6 @@
 export const stages = ['outlines', 'lessons', 'mcqs', 'flashcards', 'written', 'course_tests', 'semester_mocks'];
 
-export const batchSizes = Object.freeze({ outlines: 1, lessons: 2, mcqs: 20, flashcards: 30, written: 20, course_tests: 2, semester_mocks: 2 });
+export const batchSizes = Object.freeze({ outlines: 1, lessons: 1, mcqs: 20, flashcards: 30, written: 20, course_tests: 2, semester_mocks: 2 });
 
 export function targetsForCourse(course) {
   const high = course.credits >= 3;

@@ -134,16 +134,18 @@ class ContentRepository {
     int semester, {
     bool refresh = false,
   }) async {
-    if (!refresh && _packageCache.containsKey(semester))
+    if (!refresh && _packageCache.containsKey(semester)) {
       return _packageCache[semester];
+    }
     final statuses = await manifest(refresh: refresh);
     final status = statuses
         .where((item) => item.semester == semester)
         .firstOrNull;
     if (status == null ||
         status.status != SemesterAvailability.published ||
-        status.packageUrl == null)
+        status.packageUrl == null) {
       return null;
+    }
     try {
       final response = await _client.get(_remote(status.packageUrl!));
       if (response.statusCode != 200) return null;

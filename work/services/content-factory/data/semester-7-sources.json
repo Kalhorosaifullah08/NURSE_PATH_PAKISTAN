@@ -1,0 +1,27 @@
+{
+  "version": "2026-07-21-s7",
+  "sources": [
+    {
+      "id": "hec-bsn-msn-2024",
+      "title": "HEC Curriculum of Nursing Education - BSN and MSN 2024",
+      "publisher": "Higher Education Commission Pakistan",
+      "license": "Official National Curriculum",
+      "url": "https://www.hec.gov.pk/english/services/universities/RevisedCurricula/Documents/2023-2024/HEC%20Curriculum%20BSN-MSN%202024.pdf",
+      "scope": "Generic BSN Semester 7 course outlines, outcomes, and competencies."
+    },
+    {
+      "id": "lowdermilk-maternity-nursing",
+      "title": "Maternity & Women's Health Care",
+      "publisher": "Elsevier",
+      "license": "Academic Reference Standard",
+      "url": "https://elsevier.com/maternity-nursing",
+      "scope": "Obstetric assessment, high-risk pregnancy, postpartum care, and neonatal stabilization."
+    }
+  ],
+  "courseSources": {
+    "s7-obstetrics-gynecological-nursing": ["hec-bsn-msn-2024", "lowdermilk-maternity-nursing"],
+    "s7-advanced-clinical-practicum-1": ["hec-bsn-msn-2024"],
+    "s7-senior-seminar-nursing": ["hec-bsn-msn-2024"],
+    "s7-nursing-research-project-1": ["hec-bsn-msn-2024"]
+  }
+}

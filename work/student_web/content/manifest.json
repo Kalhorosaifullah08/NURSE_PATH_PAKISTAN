@@ -27,11 +27,11 @@
     },
     {
       "semester": 4,
-      "status": "planned",
+      "status": "queued",
       "packageVersion": null,
       "packageUrl": null,
       "itemCount": 0,
-      "updatedAt": null
+      "updatedAt": "2026-07-19T09:20:00.000Z"
     },
     {
       "semester": 5,

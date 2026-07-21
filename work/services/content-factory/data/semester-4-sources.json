@@ -1,0 +1,20 @@
+{
+  "version": "2026-07-19-s4",
+  "sources": [
+    {"id":"hec-bsn-msn-2024","title":"HEC Curriculum of Nursing Education - BSN and MSN 2024","publisher":"Higher Education Commission, Pakistan","url":"https://www.hec.gov.pk/english/services/universities/RevisedCurricula/Documents/2023-2024/HEC%20Curriculum%20BSN-MSN%202024.pdf","license":"official-publication","scope":"Official Generic BSN Semester IV structure, credits and course titles. Course content must remain aligned with the official curriculum."},
+    {"id":"openrn-health-alterations","title":"Health Alterations","publisher":"Open RN / NCBI Bookshelf","url":"https://www.ncbi.nlm.nih.gov/books/NBK613076/","license":"Open RN OER; verify item-level notices","scope":"Adult health alterations, clinical judgment and person-centred nursing care. Local protocols require institutional review."},
+    {"id":"openrn-nursing-skills-2e","title":"Nursing Skills, 2nd edition","publisher":"Open RN / NCBI Bookshelf","url":"https://www.ncbi.nlm.nih.gov/books/NBK596735/","license":"CC-BY-4.0","scope":"Physical assessment, documentation, nursing skills and safety. Local procedures require institutional review."},
+    {"id":"openrn-nursing-pharmacology-2e","title":"Nursing Pharmacology, 2nd edition","publisher":"Open RN / NCBI Bookshelf","url":"https://www.ncbi.nlm.nih.gov/books/NBK595000/","license":"CC-BY-4.0","scope":"Drug classes, pharmacology, medication safety and nursing considerations. Unsupported doses and prescribing instructions are prohibited."},
+    {"id":"openstax-anatomy-physiology-2e","title":"Anatomy and Physiology 2e","publisher":"OpenStax, Rice University","url":"https://openstax.org/details/books/anatomy-and-physiology-2e","license":"CC-BY-NC-SA-4.0","scope":"Normal structure, physiology and homeostatic mechanisms used as the foundation for pathophysiology."},
+    {"id":"openstax-psychology-2e","title":"Psychology 2e","publisher":"OpenStax, Rice University","url":"https://openstax.org/details/books/psychology-2e","license":"CC-BY-4.0","scope":"Psychological science, development, cognition, emotion, stress, coping and behaviour relevant to health contexts."},
+    {"id":"icn-code-ethics-2021","title":"The ICN Code of Ethics for Nurses","publisher":"International Council of Nurses","url":"https://www.icn.ch/resources/publications-and-reports/icn-code-ethics-nurses","license":"official-publication","scope":"Professional nursing values, ethical duties, accountability, dignity, confidentiality and global ethical guidance. Pakistani regulation requires local review."}
+  ],
+  "courseSources": {
+    "s4-applied-psychology":["hec-bsn-msn-2024","openstax-psychology-2e"],
+    "s4-medical-surgical-nursing-2":["hec-bsn-msn-2024","openrn-health-alterations","openrn-nursing-skills-2e"],
+    "s4-health-assessment-2":["hec-bsn-msn-2024","openrn-nursing-skills-2e"],
+    "s4-pathophysiology-2":["hec-bsn-msn-2024","openrn-health-alterations","openstax-anatomy-physiology-2e"],
+    "s4-clinical-pharmacology-drug-administration-2":["hec-bsn-msn-2024","openrn-nursing-pharmacology-2e"],
+    "s4-professional-ethics-for-nurses":["hec-bsn-msn-2024","icn-code-ethics-2021"]
+  }
+}

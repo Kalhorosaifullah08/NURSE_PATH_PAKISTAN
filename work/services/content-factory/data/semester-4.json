@@ -1,0 +1,113 @@
+{
+  "id": "semester-4-hec-2024",
+  "semester": 4,
+  "curriculumVersion": "hec-bsn-2024",
+  "sourceLibraryVersion": "2026-07-19-s4",
+  "courses": [
+    {
+      "id": "s4-applied-psychology",
+      "title": "Applied Psychology",
+      "category": "ID",
+      "credits": 3,
+      "theory": 3,
+      "clinical": 0,
+      "lab": 0,
+      "outcomes": [
+        "Explain core psychological concepts and their relevance to nursing practice.",
+        "Relate human development, cognition, emotion and behaviour to health and illness.",
+        "Apply psychological principles when communicating with patients, families and healthcare teams.",
+        "Recognize common responses to stress, loss, hospitalization and chronic illness.",
+        "Use culturally sensitive approaches that support coping, resilience and therapeutic relationships."
+      ]
+    },
+    {
+      "id": "s4-medical-surgical-nursing-2",
+      "title": "Medical Surgical Nursing II",
+      "category": "Major",
+      "credits": 7,
+      "theory": 3,
+      "clinical": 3,
+      "lab": 1,
+      "outcomes": [
+        "Apply integrated nursing and clinical sciences when caring for adults with complex medical-surgical conditions.",
+        "Use clinical reasoning and the nursing process to plan safe, holistic and evidence-informed care.",
+        "Recognize deterioration, prioritize nursing actions and communicate concerns using structured tools.",
+        "Plan care for patients with cardiovascular, respiratory, neurological, endocrine and musculoskeletal disorders.",
+        "Provide safe perioperative nursing care and patient education across the continuum of care.",
+        "Demonstrate ethical, culturally sensitive and collaborative practice in clinical settings."
+      ]
+    },
+    {
+      "id": "s4-health-assessment-2",
+      "title": "Health Assessment II",
+      "category": "Major",
+      "credits": 2,
+      "theory": 1,
+      "clinical": 0,
+      "lab": 1,
+      "outcomes": [
+        "Perform focused and comprehensive assessment of major body systems.",
+        "Differentiate expected, abnormal and urgent assessment findings.",
+        "Integrate history, physical examination and available clinical data.",
+        "Document and communicate assessment findings accurately and professionally.",
+        "Use assessment findings to support nursing priorities and timely escalation."
+      ]
+    },
+    {
+      "id": "s4-pathophysiology-2",
+      "title": "Pathophysiology II",
+      "category": "Major",
+      "credits": 2,
+      "theory": 2,
+      "clinical": 0,
+      "lab": 0,
+      "outcomes": [
+        "Explain altered physiological mechanisms affecting major body systems.",
+        "Relate cellular and systemic dysfunction to clinical manifestations and complications.",
+        "Connect pathophysiological processes with assessment findings and nursing priorities.",
+        "Compare acute and chronic patterns of disease progression.",
+        "Apply pathophysiology principles to safe patient education and clinical reasoning."
+      ]
+    },
+    {
+      "id": "s4-clinical-pharmacology-drug-administration-2",
+      "title": "Clinical Pharmacology and Drug Administration II",
+      "category": "Major",
+      "credits": 2,
+      "theory": 2,
+      "clinical": 0,
+      "lab": 0,
+      "outcomes": [
+        "Explain the actions, indications, contraindications and major adverse effects of commonly used drug classes.",
+        "Apply pharmacokinetic and pharmacodynamic principles to safe medication administration.",
+        "Recognize clinically significant interactions, high-alert risks and adverse drug reactions.",
+        "Use assessment and monitoring data to evaluate therapeutic and harmful medication effects.",
+        "Provide accurate patient education while avoiding unsupported dosing or prescribing advice."
+      ]
+    },
+    {
+      "id": "s4-professional-ethics-for-nurses",
+      "title": "Professional Ethics for Nurses",
+      "category": "Major",
+      "credits": 2,
+      "theory": 2,
+      "clinical": 0,
+      "lab": 0,
+      "outcomes": [
+        "Explain ethical principles, professional values and codes relevant to nursing.",
+        "Apply structured ethical reasoning to common nursing dilemmas.",
+        "Protect dignity, privacy, confidentiality, autonomy and informed decision-making.",
+        "Recognize professional boundaries, accountability and responsibilities in digital and clinical practice.",
+        "Communicate and escalate ethical concerns through appropriate professional channels."
+      ]
+    }
+  ],
+  "inventory": [
+    {"courseId": "s4-applied-psychology", "lessons": 12, "mcqs": 150, "flashcards": 45, "written": 30, "course_tests": 2},
+    {"courseId": "s4-medical-surgical-nursing-2", "lessons": 12, "mcqs": 150, "flashcards": 45, "written": 30, "course_tests": 2},
+    {"courseId": "s4-health-assessment-2", "lessons": 8, "mcqs": 100, "flashcards": 30, "written": 20, "course_tests": 2},
+    {"courseId": "s4-pathophysiology-2", "lessons": 12, "mcqs": 150, "flashcards": 45, "written": 30, "course_tests": 2},
+    {"courseId": "s4-clinical-pharmacology-drug-administration-2", "lessons": 8, "mcqs": 100, "flashcards": 30, "written": 20, "course_tests": 2},
+    {"courseId": "s4-professional-ethics-for-nurses", "lessons": 8, "mcqs": 100, "flashcards": 30, "written": 20, "course_tests": 2}
+  ]
+}

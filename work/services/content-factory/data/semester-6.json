@@ -1,0 +1,75 @@
+{
+  "id": "semester-6-hec-2024",
+  "semester": 6,
+  "curriculumVersion": "hec-bsn-2024",
+  "sourceLibraryVersion": "2026-07-21-s6",
+  "courses": [
+    {
+      "id": "s6-mental-health-nursing",
+      "title": "Psychiatric & Mental Health Nursing",
+      "category": "Major",
+      "credits": 6,
+      "theory": 3,
+      "clinical": 3,
+      "lab": 0,
+      "outcomes": [
+        "Explain neurobiological and psychosocial factors in mental health disorders.",
+        "Demonstrate therapeutic communication and nurse-patient relationship building in psychiatric settings.",
+        "Formulate nursing care plans for mood, anxiety, psychotic, substance-use, and personality disorders.",
+        "Apply psychopharmacology principles, monitoring side effects and patient safety.",
+        "Identify psychiatric emergencies, suicide risk assessment, and crisis intervention techniques."
+      ]
+    },
+    {
+      "id": "s6-critical-care-nursing",
+      "title": "Critical Care & Adult Health Nursing II",
+      "category": "Major",
+      "credits": 6,
+      "theory": 3,
+      "clinical": 3,
+      "lab": 0,
+      "outcomes": [
+        "Assess critically ill patients using hemodynamic monitoring, ABG analysis, and mechanical ventilation parameters.",
+        "Plan care for acute coronary syndromes, acute respiratory distress, shock, sepsis, and multi-organ dysfunction.",
+        "Apply rapid response protocols, cardiac arrest resuscitation (BLS/ACLS principles), and emergency triage.",
+        "Demonstrate safe management of IV vasoactive infusions, invasive lines, and critical care drug administration."
+      ]
+    },
+    {
+      "id": "s6-epidemiology",
+      "title": "Epidemiology in Health and Disease",
+      "category": "Major",
+      "credits": 2,
+      "theory": 2,
+      "clinical": 0,
+      "lab": 0,
+      "outcomes": [
+        "Calculate and interpret epidemiological measures of disease frequency (incidence, prevalence, mortality rates).",
+        "Explain disease transmission models, outbreak investigation steps, and disease surveillance systems.",
+        "Evaluate epidemiological study designs (cross-sectional, case-control, cohort, randomized trials).",
+        "Apply epidemiological principles to communicable and non-communicable disease control in Pakistan."
+      ]
+    },
+    {
+      "id": "s6-biostatistics-health-informatics",
+      "title": "Biostatistics and Health Informatics",
+      "category": "Major",
+      "credits": 3,
+      "theory": 2,
+      "clinical": 0,
+      "lab": 1,
+      "outcomes": [
+        "Apply descriptive and inferential statistical methods to health and nursing data.",
+        "Interpret p-values, confidence intervals, t-tests, chi-square, and regression analyses in research papers.",
+        "Demonstrate health informatics tools, electronic health records (EHR), and nursing data management systems.",
+        "Apply data privacy, security, and ethical guidelines in digital health records."
+      ]
+    }
+  ],
+  "inventory": [
+    {"courseId": "s6-mental-health-nursing", "lessons": 12, "mcqs": 150, "flashcards": 45, "written": 30, "course_tests": 2},
+    {"courseId": "s6-critical-care-nursing", "lessons": 12, "mcqs": 150, "flashcards": 45, "written": 30, "course_tests": 2},
+    {"courseId": "s6-epidemiology", "lessons": 8, "mcqs": 100, "flashcards": 30, "written": 20, "course_tests": 2},
+    {"courseId": "s6-biostatistics-health-informatics", "lessons": 8, "mcqs": 100, "flashcards": 30, "written": 20, "course_tests": 2}
+  ]
+}

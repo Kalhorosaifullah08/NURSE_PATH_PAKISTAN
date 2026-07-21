@@ -1,0 +1,54 @@
+{
+  "id": "semester-8-hec-2024",
+  "semester": 8,
+  "curriculumVersion": "hec-bsn-2024",
+  "sourceLibraryVersion": "2026-07-21-s8",
+  "courses": [
+    {
+      "id": "s8-comprehensive-nursing-review",
+      "title": "Comprehensive BSN Board & Licensing Review",
+      "category": "Major",
+      "credits": 4,
+      "theory": 4,
+      "clinical": 0,
+      "lab": 0,
+      "outcomes": [
+        "Synthesize concepts across Fundamentals, Anatomy, Physiology, Pharmacology, Pathophysiology, Medical-Surgical, Pediatrics, Obstetrics, and Mental Health Nursing.",
+        "Demonstrate high-yield NCLEX/PNC exam style clinical reasoning, prioritization, and delegation skills.",
+        "Apply test-taking strategies for multiple-choice, select-all-that-apply, and case-study examination formats."
+      ]
+    },
+    {
+      "id": "s8-clinical-internship-practicum",
+      "title": "Senior Clinical Internship Practicum II",
+      "category": "Major",
+      "credits": 8,
+      "theory": 0,
+      "clinical": 8,
+      "lab": 0,
+      "outcomes": [
+        "Demonstrate full entry-level professional nurse competency across specialized acute, critical, and outpatient hospital units.",
+        "Manage patient workloads independently with safe medication administration, documentation, and handover reporting.",
+        "Apply ethical practice, cultural safety, patient advocacy, and emergency intervention protocols."
+      ]
+    },
+    {
+      "id": "s8-leadership-capstone",
+      "title": "Leadership & Professional Nursing Capstone",
+      "category": "Major",
+      "credits": 3,
+      "theory": 1,
+      "clinical": 2,
+      "lab": 0,
+      "outcomes": [
+        "Complete a clinical quality improvement (QI) or patient-safety capstone project in a partner healthcare facility.",
+        "Present capstone findings to clinical leadership, proposing evidence-based practice changes."
+      ]
+    }
+  ],
+  "inventory": [
+    {"courseId": "s8-comprehensive-nursing-review", "lessons": 16, "mcqs": 250, "flashcards": 60, "written": 40, "course_tests": 4},
+    {"courseId": "s8-clinical-internship-practicum", "lessons": 8, "mcqs": 100, "flashcards": 30, "written": 20, "course_tests": 2},
+    {"courseId": "s8-leadership-capstone", "lessons": 8, "mcqs": 100, "flashcards": 30, "written": 20, "course_tests": 2}
+  ]
+}

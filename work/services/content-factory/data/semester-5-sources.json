@@ -1,0 +1,35 @@
+{
+  "version": "2026-07-21-s5",
+  "sources": [
+    {
+      "id": "hec-bsn-msn-2024",
+      "title": "HEC Curriculum of Nursing Education - BSN and MSN 2024",
+      "publisher": "Higher Education Commission Pakistan",
+      "license": "Official National Curriculum",
+      "url": "https://www.hec.gov.pk/english/services/universities/RevisedCurricula/Documents/2023-2024/HEC%20Curriculum%20BSN-MSN%202024.pdf",
+      "scope": "Generic BSN Semester 5 course outlines, outcomes, and competencies."
+    },
+    {
+      "id": "wong-pediatrics-nursing",
+      "title": "Wong's Essentials of Pediatric Nursing",
+      "publisher": "Elsevier",
+      "license": "Academic Reference Standard",
+      "url": "https://elsevier.com/wong-pediatric-nursing",
+      "scope": "Pediatric assessment, growth & development, pediatric disease management, and family-centered care."
+    },
+    {
+      "id": "stanhope-community-nursing",
+      "title": "Public Health Nursing: Population-Centered Health Care in the Community",
+      "publisher": "Elsevier",
+      "license": "Academic Reference Standard",
+      "url": "https://elsevier.com/public-health-nursing",
+      "scope": "Community assessment, epidemiology, environmental health, and public health nursing interventions."
+    }
+  ],
+  "courseSources": {
+    "s5-pediatric-nursing": ["hec-bsn-msn-2024", "wong-pediatrics-nursing"],
+    "s5-community-health-nursing-2": ["hec-bsn-msn-2024", "stanhope-community-nursing"],
+    "s5-nursing-research-1": ["hec-bsn-msn-2024"],
+    "s5-nursing-leadership-management": ["hec-bsn-msn-2024"]
+  }
+}

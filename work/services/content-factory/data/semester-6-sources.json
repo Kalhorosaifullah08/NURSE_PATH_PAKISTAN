@@ -1,0 +1,35 @@
+{
+  "version": "2026-07-21-s6",
+  "sources": [
+    {
+      "id": "hec-bsn-msn-2024",
+      "title": "HEC Curriculum of Nursing Education - BSN and MSN 2024",
+      "publisher": "Higher Education Commission Pakistan",
+      "license": "Official National Curriculum",
+      "url": "https://www.hec.gov.pk/english/services/universities/RevisedCurricula/Documents/2023-2024/HEC%20Curriculum%20BSN-MSN%202024.pdf",
+      "scope": "Generic BSN Semester 6 course outlines, outcomes, and competencies."
+    },
+    {
+      "id": "townsend-psychiatric-nursing",
+      "title": "Psychiatric Mental Health Nursing: Concepts of Care in Evidence-Based Practice",
+      "publisher": "F.A. Davis",
+      "license": "Academic Reference Standard",
+      "url": "https://fadavis.com/psychiatric-nursing",
+      "scope": "Psychiatric nursing assessment, DSM-5 alignment, psychotropic medications, and therapeutic communication."
+    },
+    {
+      "id": "marini-critical-care",
+      "title": "Critical Care Medicine: The Essentials",
+      "publisher": "Lippincott Williams & Wilkins",
+      "license": "Academic Reference Standard",
+      "url": "https://lww.com/critical-care-medicine",
+      "scope": "Hemodynamic monitoring, mechanical ventilation, shock management, and acute cardiac care."
+    }
+  ],
+  "courseSources": {
+    "s6-mental-health-nursing": ["hec-bsn-msn-2024", "townsend-psychiatric-nursing"],
+    "s6-critical-care-nursing": ["hec-bsn-msn-2024", "marini-critical-care"],
+    "s6-epidemiology": ["hec-bsn-msn-2024"],
+    "s6-biostatistics-health-informatics": ["hec-bsn-msn-2024"]
+  }
+}
