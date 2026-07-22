@@ -1,8 +1,8 @@
 import 'dart:ui';
 
-import 'package:nursepath_pakistan/data/sample_repository.dart';
-import 'package:nursepath_pakistan/state/app_state.dart';
-import 'package:nursepath_pakistan/main.dart' as student_app;
+import 'package:nursely_pakistan/data/sample_repository.dart';
+import 'package:nursely_pakistan/state/app_state.dart';
+import 'package:nursely_pakistan/main.dart' as student_app;
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -31,7 +31,7 @@ void main() {
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
 
-    await tester.pumpWidget(const student_app.NursePathApp());
+    await tester.pumpWidget(const student_app.NurselyApp());
     await tester.pumpAndSettle();
 
     expect(
