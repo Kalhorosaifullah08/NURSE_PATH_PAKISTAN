@@ -101,7 +101,7 @@ async function seedSemesterNum(semNum) {
 }
 
 async function notifyOwnerOnComplete({ semester, jobId, consumedUsd }) {
-  const message = `🎉 NursePath Pakistan Semester ${semester} generation complete & verified! Total spent: $${consumedUsd.toFixed(4)}. Sent notification to ${ownerEmail}`;
+  const message = `🎉 Nursely Pakistan Semester ${semester} generation complete & verified! Total spent: $${consumedUsd.toFixed(4)}. Sent notification to ${ownerEmail}`;
   console.log(`[NOTIFICATION_SEMESTER_COMPLETE] ${message}`);
   try {
     await db.collection('notifications').add({
@@ -110,7 +110,7 @@ async function notifyOwnerOnComplete({ semester, jobId, consumedUsd }) {
       semester,
       jobId,
       consumedUsd,
-      message: `NursePath Pakistan Semester ${semester} content generation and automated verification are 100% complete! Total credit spent: $${consumedUsd.toFixed(4)}.`,
+      message: `Nursely Pakistan Semester ${semester} content generation and automated verification are 100% complete! Total credit spent: $${consumedUsd.toFixed(4)}.`,
       sentAt: FieldValue.serverTimestamp()
     });
   } catch (err) {
@@ -234,7 +234,7 @@ async function processBatch() {
 
   const mockPrompt = () => {
     const courses = semesterData.courses.map(c => `${c.id}: ${c.title}, ${c.credits} credits`).join('\n');
-    return `Create exactly ${count} INTERNAL DRAFT Semester ${activeSemester} mock-examination blueprints for NursePath Pakistan abiding strictly by HEC Generic BSN Curriculum guidelines.\nCourses:\n${courses}\n` +
+    return `Create exactly ${count} INTERNAL DRAFT Semester ${activeSemester} mock-examination blueprints for Nursely Pakistan abiding strictly by HEC Generic BSN Curriculum guidelines.\nCourses:\n${courses}\n` +
       `Each mock selects from the generated MCQ banks, contains 100 questions, allocates questions broadly by credits, covers every course, and has a 120-minute duration. Return JSON only.`;
   };
 
@@ -284,11 +284,11 @@ async function processBatch() {
 
 http.createServer(async (req, res) => {
   try {
-    if (req.method === 'GET' && req.url === '/healthz') return reply(res, 200, { service: 'nursepath-content-worker', status: 'healthy', pipelineVersion: 3, autoAdvance: true, ownerEmail, model, reviewModel, semesterCapUsd, globalCapUsd, maxBatchUsd });
+    if (req.method === 'GET' && req.url === '/healthz') return reply(res, 200, { service: 'nursely-content-worker', status: 'healthy', pipelineVersion: 3, autoAdvance: true, ownerEmail, model, reviewModel, semesterCapUsd, globalCapUsd, maxBatchUsd });
     if (req.method === 'POST' && req.url === '/run') return reply(res, 200, await processBatch());
     return reply(res, 404, { error: 'not_found' });
   } catch (error) {
     console.error(error);
     return reply(res, 500, { error: 'worker_failure', message: error.message });
   }
-}).listen(port, () => console.log(`NursePath worker listening on ${port}`));
+}).listen(port, () => console.log(`Nursely worker listening on ${port}`));

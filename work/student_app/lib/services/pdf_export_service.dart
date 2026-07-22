@@ -25,7 +25,7 @@ class PdfExportService {
                     crossAxisAlignment: pw.CrossAxisAlignment.start,
                     children: [
                       pw.Text(
-                        'NURSEPATH PAKISTAN — CLINICAL ROTATION CHEAT SHEET',
+                        'NURSELY PAKISTAN — CLINICAL ROTATION CHEAT SHEET',
                         style: pw.TextStyle(
                           fontSize: 10,
                           fontWeight: pw.FontWeight.bold,
@@ -123,7 +123,7 @@ class PdfExportService {
             }),
             pw.Footer(
               trailing: pw.Text(
-                'NursePath Pakistan — Offline Clinical Reference',
+                'Nursely Pakistan — Offline Clinical Reference',
                 style: const pw.TextStyle(fontSize: 9, color: PdfColors.grey600),
               ),
             ),

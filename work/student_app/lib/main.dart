@@ -17,22 +17,22 @@ const muted = Color(0xff64748B);
 const line = Color(0xffE2E8F0);
 const warm = Color(0xffFFFBEB);
 
-void main() => runApp(const NursePathApp());
+void main() => runApp(const NurselyApp());
 
-class NursePathApp extends StatefulWidget {
-  const NursePathApp({super.key});
+class NurselyApp extends StatefulWidget {
+  const NurselyApp({super.key});
   @override
-  State<NursePathApp> createState() => _NursePathAppState();
+  State<NurselyApp> createState() => _NurselyAppState();
 }
 
-class _NursePathAppState extends State<NursePathApp> {
+class _NurselyAppState extends State<NurselyApp> {
   final state = AppState();
   @override
   Widget build(BuildContext context) {
     final baseTextTheme = GoogleFonts.interTextTheme(Theme.of(context).textTheme);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'NursePath Pakistan',
+      title: 'Nursely Pakistan',
       theme: ThemeData(
         useMaterial3: true,
         scaffoldBackgroundColor: canvas,
